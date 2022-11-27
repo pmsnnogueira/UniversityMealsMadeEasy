@@ -19,4 +19,28 @@ public class Context {
       throw new NullPointerException("state cannot be null");
     this.state = state.getState(dataManager, this);
   }
+  public boolean login(String username) {
+    return state.login(username);
+  }
+  public boolean logout() {
+    return state.logout();
+  }
+  public boolean changeToMainMenu() {
+    return state.changeToMainMenu();
+  }
+  public boolean changeToMealOrdering() {
+    return state.changeToMealOrdering();
+  }
+  public boolean changeToMenuConsultation() {
+    return state.changeToMenuConsultation();
+  }
+  public boolean changeToReviewal() {
+    return state.changeToReviewal();
+  }
+  public boolean changeToTicketsConsultation() {
+    return state.changeToTicketsConsultation();
+  }
+  public boolean changeToTransactionHistory() {
+    return state.changeToTransactionHistory();
+  }
 }

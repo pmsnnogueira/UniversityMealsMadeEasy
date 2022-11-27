@@ -19,4 +19,22 @@ public class Context {
       throw new NullPointerException("state cannot be null");
     this.state = state.getState(dataManager, this);
   }
+  public void changeToConfiguration() {
+    state.changeToConfiguration();
+  }
+  public void changeToMainMenu() {
+    state.changeToMainMenu();
+  }
+  public void changeToMealInsertion() {
+    state.changeToMealInsertion();
+  }
+  public void changeToOrderedMealsConsultation() {
+    state.changeToOrderedMealsConsultation();
+  }
+  public void changeToReviewsConsultation() {
+    state.changeToReviewsConsultation();
+  }
+  public void changeToTicketValidation() {
+    state.changeToTicketValidation();
+  }
 }
