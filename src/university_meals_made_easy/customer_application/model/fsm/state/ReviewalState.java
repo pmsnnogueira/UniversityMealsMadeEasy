@@ -4,7 +4,8 @@ import university_meals_made_easy.customer_application.model.data.DataManager;
 import university_meals_made_easy.customer_application.model.fsm.State;
 
 public class ReviewalState extends StateAdapter {
-  public ReviewalState(DataManager dataManager, Context context) {
+  public ReviewalState(DataManager dataManager, Context context)
+      throws NullPointerException {
     super(dataManager, context);
   }
   @Override

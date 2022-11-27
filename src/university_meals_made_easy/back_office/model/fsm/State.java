@@ -11,7 +11,8 @@ public enum State {
   MEAL_INSERTION,
   CONFIGURATION;
 
-  public IState getState(DataManager dataManager, Context context) {
+  public IState getState(DataManager dataManager, Context context)
+      throws NullPointerException {
     return (switch (this) {
       case MAIN_MENU -> new MainMenuState(dataManager, context);
       case TICKET_VALIDATION -> new TicketValidationState(dataManager, context);

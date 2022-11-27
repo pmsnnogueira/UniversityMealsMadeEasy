@@ -12,7 +12,8 @@ public enum State {
   REVIEWAL,
   TRANSACTION_HISTORY;
 
-  public IState getState(DataManager dataManager, Context context) {
+  public IState getState(DataManager dataManager, Context context)
+      throws NullPointerException {
     return (switch (this) {
       case AUTHENTICATION -> new AuthenticationState(dataManager, context);
       case MAIN_MENU -> new MainMenuState(dataManager, context);

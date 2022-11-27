@@ -4,7 +4,8 @@ import university_meals_made_easy.back_office.model.data.DataManager;
 import university_meals_made_easy.back_office.model.fsm.State;
 
 public class ConfigurationState extends StateAdapter {
-  public ConfigurationState(DataManager dataManager, Context context) {
+  public ConfigurationState(DataManager dataManager, Context context)
+      throws NullPointerException {
     super(dataManager, context);
   }
   @Override

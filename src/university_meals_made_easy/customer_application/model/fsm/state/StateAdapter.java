@@ -8,7 +8,8 @@ public abstract class StateAdapter implements IState {
   protected final DataManager dataManager;
   protected final Context context;
 
-  public StateAdapter(DataManager dataManager, Context context) {
+  public StateAdapter(DataManager dataManager, Context context)
+      throws NullPointerException {
     if (dataManager == null)
       throw new NullPointerException("data manager cannot be null");
     if (context == null)

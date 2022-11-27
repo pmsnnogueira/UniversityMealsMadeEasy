@@ -9,6 +9,8 @@ public class Context {
   private IState state;
 
   public Context(DataManager dataManager) throws NullPointerException {
+    if (dataManager == null)
+      throw new NullPointerException("data manager cannot be null");
     this.dataManager = dataManager;
     state = new AuthenticationState(dataManager, this);
   }

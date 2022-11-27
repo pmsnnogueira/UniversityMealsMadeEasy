@@ -5,7 +5,8 @@ import university_meals_made_easy.back_office.model.fsm.State;
 
 public class OrderedMealsConsultationState extends StateAdapter {
   public OrderedMealsConsultationState(DataManager dataManager,
-                                       Context context) {
+                                       Context context)
+      throws NullPointerException {
     super(dataManager, context);
   }
   @Override
