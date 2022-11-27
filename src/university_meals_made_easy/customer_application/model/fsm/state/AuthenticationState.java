@@ -15,9 +15,11 @@ public class AuthenticationState extends StateAdapter {
   public boolean login(String username) throws NullPointerException {
     if (username == null)
       throw new NullPointerException("username cannot be null");
-    dataManager.login(username);
-    context.changeState(State.AUTHENTICATION);
-    return true;
+    if (dataManager.login(username)) {
+      context.changeState(State.AUTHENTICATION);
+      return true;
+    }
+    return false;
   }
   @Override
   public boolean logout() {
