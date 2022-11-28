@@ -19,6 +19,9 @@ public class Context {
       throw new NullPointerException("state cannot be null");
     this.state = state.getState(dataManager, this);
   }
+  public State getState() {
+    return state.getState();
+  }
   public void changeToConfiguration() {
     state.changeToConfiguration();
   }

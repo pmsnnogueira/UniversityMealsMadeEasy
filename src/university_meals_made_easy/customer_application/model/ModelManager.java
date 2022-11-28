@@ -1,6 +1,7 @@
 package university_meals_made_easy.customer_application.model;
 
 import university_meals_made_easy.customer_application.model.data.DataManager;
+import university_meals_made_easy.customer_application.model.fsm.State;
 import university_meals_made_easy.customer_application.model.fsm.state.Context;
 
 public class ModelManager {
@@ -13,6 +14,9 @@ public class ModelManager {
       throw new NullPointerException("data manager cannot be null");
     this.dataManager = dataManager;
     context = new Context(dataManager);
+  }
+  public State getState() {
+    return context.getState();
   }
   public boolean login(String username) {
     return context.login(username);
