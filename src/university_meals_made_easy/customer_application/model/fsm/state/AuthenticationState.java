@@ -16,7 +16,7 @@ public class AuthenticationState extends StateAdapter {
     if (username == null)
       throw new NullPointerException("username cannot be null");
     if (dataManager.login(username)) {
-      context.changeState(State.AUTHENTICATION);
+      context.changeState(State.MAIN_MENU);
       return true;
     }
     return false;

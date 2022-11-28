@@ -1,9 +1,7 @@
 package university_meals_made_easy.customer_application.ui.gui.views;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -45,8 +43,11 @@ public class AuthenticationPane extends BorderPane {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
 
     btnLogin.setOnAction(actionEvent -> {
-      if(!manager.login(usernameField.getPromptText())) {
-        System.out.println("Login failed");
+      if(!manager.login(usernameField.getText())) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setContentText("Invalid username");
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
+        dialog.show();
       }
     });
   }

@@ -85,6 +85,8 @@ public class RootPane extends BorderPane {
         new HistoryPane(manager)));
   }
   private void registerHandlers() {
+    manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
+
     btnMainMenu.setOnAction(actionEvent -> {
       manager.changeToMainMenu();
     });
@@ -110,6 +112,8 @@ public class RootPane extends BorderPane {
   private void update() {
     if(manager.getState() == State.AUTHENTICATION) {
       leftButtonsVBox.setVisible(false);
+    } else {
+      leftButtonsVBox.setVisible(true);
     }
   }
 }
