@@ -1,0 +1,8 @@
+// {type:state}
+// {generate:true}
+
+(start)->(AuthenticationState)
+
+(AuthenticationState)exit->(end)
+(AuthenticationState)login[username is empty or contains blank characters]->(AuthenticationState)
+(AuthenticationState)login[username isn't empty and doesn't contains blank characters]->(MainMenuState)

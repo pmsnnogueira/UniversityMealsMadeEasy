@@ -1,0 +1,10 @@
+// {type:state}
+// {generate:true}
+
+(OtherState)changeToMealInsertion->(MealInsertionState)
+(MealInsertionState)exit->(end)
+(MealInsertionState)changeToMainMenu->(MainMenuState)
+(MealInsertionState)changeToConfiguration->(ConfigurationState)
+(MealInsertionState)changeToOrderedMealsConsultation->(OrderedMealsConsultationState)
+(MealInsertionState)changeToReviewsConsultation->(ReviewsConsultationState)
+(MealInsertionState)changeToTicketValidation->(TicketValidationState)

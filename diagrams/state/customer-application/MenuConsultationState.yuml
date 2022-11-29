@@ -1,0 +1,11 @@
+// {type:state}
+// {generate:true}
+
+(OtherState besides AuthenticationState)changeToMealOrdering->(MenuConsultationState)
+(MenuConsultationState)exit->(end)
+(MenuConsultationState)logout->(AuthenticationState)
+(MenuConsultationState)changeToMainMenu->(MainMenuState)
+(MenuConsultationState)changeToMealOrdering->(MealOrderingState)
+(MenuConsultationState)changeToReviewal->(ReviewalState)
+(MenuConsultationState)changeToTicketsConsultation->(TicketsConsultationState)
+(MenuConsultationState)changeToTransactionHistory->(TransactionHistoryState)

@@ -1,0 +1,12 @@
+// {type:state}
+// {generate:true}
+
+(AuthenticationState)login[username isn't empty and doesn't contains blank characters]->(MainMenuState)
+(AuthenticatedState)changeToMealOrdering->(MainMenuState)
+(MainMenuState)exit->(end)
+(MainMenuState)logout->(AuthenticationState)
+(MainMenuState)changeToMealOrdering->(MealOrderingState)
+(MainMenuState)changeToMenuConsultation->(MenuConsultationState)
+(MainMenuState)changeToReviewal->(ReviewalState)
+(MainMenuState)changeToTicketsConsultation->(TicketsConsultationState)
+(MainMenuState)changeToTransactionHistory->(TransactionHistoryState)
