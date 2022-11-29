@@ -18,6 +18,7 @@ public class RootPane extends BorderPane {
   ToggleButton btnMainMenu, btnOrderMeal, btnMenus, btnMyTickets;
   ToggleButton btnReviewMeal, btnHistory, btnLogout;
   ToggleGroup tgTabButtons;
+  BalancePane balancePane;
 
   public RootPane(ModelManager manager) {
     this.manager = manager;
@@ -35,6 +36,9 @@ public class RootPane extends BorderPane {
     Label title2 = new Label("Made Easy");
     title2.setFont(Font.font(20));
     title2.setPadding(new Insets(0, 0, 150, 0));
+
+    balancePane = new BalancePane(manager);
+    this.setRight(balancePane);
 
     btnMainMenu = new ToggleButton("Main Menu");
     btnMainMenu.setToggleGroup(tgTabButtons);
@@ -112,8 +116,10 @@ public class RootPane extends BorderPane {
   private void update() {
     if(manager.getState() == State.AUTHENTICATION) {
       leftButtonsVBox.setVisible(false);
+      balancePane.setVisible(false);
     } else {
       leftButtonsVBox.setVisible(true);
+      balancePane.setVisible(true);
     }
   }
 }
