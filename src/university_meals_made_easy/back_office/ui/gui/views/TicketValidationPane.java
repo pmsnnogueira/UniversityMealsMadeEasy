@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.model.ModelManager;
 import university_meals_made_easy.back_office.model.fsm.State;
+import university_meals_made_easy.back_office.ui.gui.AlertBox;
 
 public class TicketValidationPane extends BorderPane {
   private final ModelManager manager;
@@ -50,7 +51,14 @@ public class TicketValidationPane extends BorderPane {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
 
     btnValidateTicket.setOnAction(actionEvent -> {
-      //manager.validateTicket(ticketTextField.getText());
+      boolean result = true; //manager.validateTicket(ticketIdTextField.getText());
+      if(result) {
+        AlertBox alertBox = new AlertBox("Success", "Ticket has " +
+            "been validated");
+      } else {
+        AlertBox alertBox = new AlertBox("Error", "Failed to " +
+            "validate ticket");
+      }
     });
   }
 
