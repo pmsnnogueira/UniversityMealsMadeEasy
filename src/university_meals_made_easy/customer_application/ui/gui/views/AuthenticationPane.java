@@ -27,12 +27,12 @@ public class AuthenticationPane extends BorderPane {
     VBox topVBox = new VBox(title);
     topVBox.setAlignment(Pos.CENTER);
     this.setTop(topVBox);
-    Label textfieldTitle = new Label("Username");
+    Label textFieldTitle = new Label("Username");
     usernameField = new TextField();
     usernameField.setPrefWidth(300);
     usernameField.setMaxWidth(300);
     btnLogin = new Button("Login");
-    VBox centerVBox = new VBox(textfieldTitle, usernameField, btnLogin);
+    VBox centerVBox = new VBox(textFieldTitle, usernameField, btnLogin);
     centerVBox.setAlignment(Pos.CENTER);
     centerVBox.setSpacing(20);
     this.setCenter(centerVBox);

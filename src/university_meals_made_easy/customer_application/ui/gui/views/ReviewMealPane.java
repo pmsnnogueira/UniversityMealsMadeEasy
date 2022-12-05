@@ -48,7 +48,7 @@ public class ReviewMealPane extends BorderPane {
     observationsTextArea.setPromptText("Observations...");
     observationsTextArea.setPrefHeight(200);
     observationsTextArea.setPrefWidth(200);
-    btnSubmitReview = new Button("Refund");
+    btnSubmitReview = new Button("Reviews");
     btnSubmitReview.setPrefWidth(200);
     btnSubmitReview.setPrefHeight(100);
     VBox rightVBox = new VBox(rateThisMealLabel, rateSlider, observationsTextArea, btnSubmitReview);
