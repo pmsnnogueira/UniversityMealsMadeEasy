@@ -1,7 +1,7 @@
 // {type:state}
 // {generate:true}
 
-(OtherState besides AuthenticationState)changeToMealOrdering->(MenuConsultationState)
+(AuthenticatedState)changeToMealOrdering->(MenuConsultationState)
 (MenuConsultationState)exit->(end)
 (MenuConsultationState)logout->(AuthenticationState)
 (MenuConsultationState)changeToMainMenu->(MainMenuState)
