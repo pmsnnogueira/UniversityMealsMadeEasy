@@ -23,7 +23,7 @@ public class SampleMain {
         DatabaseManager.getInstance().close();
       } catch (SQLException e) {
         Logger.getInstance().error(tag,
-            "couldn't close database connection");
+            "couldn't close connection");
       }
     }
   }
