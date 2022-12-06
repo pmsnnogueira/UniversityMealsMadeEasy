@@ -19,8 +19,6 @@ public class Review extends Transaction {
       throws NullPointerException, IllegalArgumentException {
     if (dateTimeString == null)
       throw new NullPointerException("date time string cannot be null");
-    if (comment == null)
-      throw new NullPointerException("comment cannot be null");
     if (rating < 0)
       throw new IllegalArgumentException("rating must be 0 or positive");
     if (rating > 10)

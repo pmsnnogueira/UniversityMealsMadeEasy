@@ -147,4 +147,17 @@ public class DatabaseManager {
   public void close() throws SQLException {
     connection.close();
   }
+  public void login(String username) throws SQLException {
+    try (Statement statement = connection.createStatement()) {
+      if (!statement.executeQuery(String.format("""
+          SELECT *
+          FROM app_user
+          WHERE username = '%s';
+          """, username)).next())
+        statement.execute(String.format("""
+            INSERT INTO app_user
+            VALUES (NULL, '%s', 0);
+            """, username));
+    }
+  }
 }
