@@ -1,6 +1,8 @@
 package university_meals_made_easy.back_office.model;
 
 import university_meals_made_easy.back_office.model.data.DataManager;
+import university_meals_made_easy.back_office.model.data.DatabaseManager;
+import university_meals_made_easy.back_office.model.data.result.*;
 import university_meals_made_easy.back_office.model.fsm.State;
 import university_meals_made_easy.back_office.model.fsm.state.Context;
 import university_meals_made_easy.database.tables.FoodItem;
@@ -9,6 +11,7 @@ import university_meals_made_easy.database.tables.Meal.MealPeriod;
 import university_meals_made_easy.database.tables.TimeSlot;
 import university_meals_made_easy.database.tables.transaction.Review;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -120,5 +123,23 @@ public class ModelManager {
   }
   public List<FoodItem> getFoodItems(Meal meal) {
     return dataManager.getFoodItems(meal);
+  }
+  public TicketValidationResult validateTicket(int id) {
+    return context.validateTicket(id);
+  }
+  public MealInsertionResult insertMeal(MealPeriod mealPeriod,
+                                        LocalDate date) {
+    return context.insertMeal(mealPeriod, date);
+  }
+  public MealFoodItemInsertionResult insertFoodItem(Meal meal, float price,
+                                                    String description) {
+    return context.insertFoodItem(meal, price, description);
+  }
+  public MealFoodItemsClearingResult clearFoodItems(Meal meal) {
+    return context.clearFoodItems(meal);
+  }
+  public TimeSlotCapacityConfiguringResult configureCapacity(TimeSlot slot,
+                                                             int capacity) {
+    return context.configureCapacity(slot, capacity);
   }
 }

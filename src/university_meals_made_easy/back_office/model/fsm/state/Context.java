@@ -1,8 +1,14 @@
 package university_meals_made_easy.back_office.model.fsm.state;
 
 import university_meals_made_easy.back_office.model.data.DataManager;
+import university_meals_made_easy.back_office.model.data.result.*;
 import university_meals_made_easy.back_office.model.fsm.IState;
 import university_meals_made_easy.back_office.model.fsm.State;
+import university_meals_made_easy.database.tables.Meal.Meal;
+import university_meals_made_easy.database.tables.Meal.MealPeriod;
+import university_meals_made_easy.database.tables.TimeSlot;
+
+import java.time.LocalDate;
 
 /**
  * Context class
@@ -83,5 +89,28 @@ public class Context {
    */
   public void changeToTicketValidation() {
     state.changeToTicketValidation();
+  }
+
+  public TicketValidationResult validateTicket(int id) {
+    return state.validateTicket(id);
+  }
+
+  public MealInsertionResult
+  insertMeal(MealPeriod mealPeriod, LocalDate date) {
+    return state.insertMeal(mealPeriod, date);
+  }
+
+  public MealFoodItemInsertionResult insertFoodItem(Meal meal, float price,
+                                                    String description) {
+    return state.insertFoodItem(meal, price, description);
+  }
+
+  public MealFoodItemsClearingResult clearFoodItems(Meal meal) {
+    return state.clearFoodItems(meal);
+  }
+
+  public TimeSlotCapacityConfiguringResult configureCapacity(TimeSlot slot,
+                                                             int capacity) {
+    return state.configureCapacity(slot, capacity);
   }
 }

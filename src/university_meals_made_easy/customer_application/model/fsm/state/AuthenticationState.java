@@ -1,6 +1,8 @@
 package university_meals_made_easy.customer_application.model.fsm.state;
 
 import university_meals_made_easy.customer_application.model.data.DataManager;
+import university_meals_made_easy.customer_application.model.data.result.BalanceTopOffResult;
+import university_meals_made_easy.customer_application.model.data.result.LoginResult;
 import university_meals_made_easy.customer_application.model.fsm.State;
 
 /**
@@ -29,14 +31,15 @@ public class AuthenticationState extends StateAdapter {
    * @throws NullPointerException
    */
   @Override
-  public boolean login(String username) throws NullPointerException {
+  public LoginResult login(String username) throws NullPointerException {
+    LoginResult loginResult;
+
     if (username == null)
       throw new NullPointerException("username cannot be null");
-    if (dataManager.login(username)) {
+    loginResult = dataManager.login(username);
+    if (loginResult == LoginResult.SUCCESS)
       context.changeState(State.MAIN_MENU);
-      return true;
-    }
-    return false;
+    return loginResult;
   }
 
   /**
@@ -106,5 +109,9 @@ public class AuthenticationState extends StateAdapter {
   @Override
   public boolean changeToTransactionHistory() {
     return false;
+  }
+  @Override
+  public BalanceTopOffResult topOffBalance(float value) {
+    return null;
   }
 }

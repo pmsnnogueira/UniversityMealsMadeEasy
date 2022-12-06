@@ -83,9 +83,8 @@ public class Logger {
   }
   public void close() {
     try {
-      if (bufferedWriter == null)
-        throw new UnsupportedOperationException("logger in stdout mode");
-      bufferedWriter.close();
+      if (bufferedWriter != null)
+        bufferedWriter.close();
     } catch (IOException ignored) {}
   }
 }

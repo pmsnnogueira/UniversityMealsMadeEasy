@@ -337,7 +337,7 @@ public class DatabaseManager {
             resultSet.getInt("id"),
             resultSet.getInt("app_user_id"),
             resultSet.getInt("ticket_id"),
-            resultSet.getString("date_time"),
+            resultSet.getString("datetime"),
             resultSet.getInt("rating"),
             resultSet.getString("comment")
         ));

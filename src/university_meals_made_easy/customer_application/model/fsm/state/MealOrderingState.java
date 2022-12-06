@@ -1,7 +1,12 @@
 package university_meals_made_easy.customer_application.model.fsm.state;
 
 import university_meals_made_easy.customer_application.model.data.DataManager;
+import university_meals_made_easy.customer_application.model.data.result.BuyResult;
 import university_meals_made_easy.customer_application.model.fsm.State;
+import university_meals_made_easy.database.tables.FoodItem;
+import university_meals_made_easy.database.tables.TimeSlot;
+
+import java.util.List;
 
 /**
  * Class for MealOrdering State
@@ -16,7 +21,10 @@ public class MealOrderingState extends StateAdapter {
   public MealOrderingState(DataManager dataManager, Context context) {
     super(dataManager, context);
   }
-
+  @Override
+  public BuyResult buy(TimeSlot slot, List<FoodItem> foodItems) {
+    return dataManager.buy(slot, foodItems);
+  }
   /**
    * @return
    */

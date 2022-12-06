@@ -1,7 +1,9 @@
 package university_meals_made_easy.customer_application.model.fsm.state;
 
 import university_meals_made_easy.customer_application.model.data.DataManager;
+import university_meals_made_easy.customer_application.model.data.result.RefundResult;
 import university_meals_made_easy.customer_application.model.fsm.State;
+import university_meals_made_easy.database.tables.transaction.Ticket;
 
 /**
  * Class for TicketsConsultation State
@@ -16,7 +18,10 @@ public class TicketsConsultationState extends StateAdapter {
   public TicketsConsultationState(DataManager dataManager, Context context) {
     super(dataManager, context);
   }
-
+  @Override
+  public RefundResult refund(Ticket ticket) {
+    return dataManager.refund(ticket);
+  }
   /**
    * @return
    */

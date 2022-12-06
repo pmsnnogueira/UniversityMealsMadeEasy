@@ -38,10 +38,6 @@ public abstract class StateAdapter implements IState {
    * method that changes the current state to configuration state on the fsm
    */
   @Override
-  public State getState() {
-    return null;
-  }
-  @Override
   public void changeToConfiguration() {
     context.changeState(State.CONFIGURATION);
   }

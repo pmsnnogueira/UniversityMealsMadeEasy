@@ -1,11 +1,22 @@
 package university_meals_made_easy.customer_application.model;
 
 import university_meals_made_easy.customer_application.model.data.DataManager;
+import university_meals_made_easy.customer_application.model.data.DatabaseManager;
+import university_meals_made_easy.customer_application.model.data.result.*;
 import university_meals_made_easy.customer_application.model.fsm.State;
 import university_meals_made_easy.customer_application.model.fsm.state.Context;
+import university_meals_made_easy.database.tables.FoodItem;
+import university_meals_made_easy.database.tables.Meal.Meal;
+import university_meals_made_easy.database.tables.Meal.MealPeriod;
+import university_meals_made_easy.database.tables.TimeSlot;
+import university_meals_made_easy.database.tables.transaction.Ticket;
+import university_meals_made_easy.database.tables.transaction.Transaction;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Class to make the connection between the View and the data model
@@ -52,8 +63,8 @@ public class ModelManager {
    * This method is used to change the current state of fsm to login
    * @return result
    */
-  public boolean login(String username) {
-    boolean result = context.login(username);
+  public LoginResult login(String username) {
+    LoginResult result = context.login(username);
     pcs.firePropertyChange(PROP_STATE, null, null);
     return result;
   }
@@ -126,5 +137,39 @@ public class ModelManager {
     boolean result = context.changeToTransactionHistory();
     pcs.firePropertyChange(PROP_STATE, null, null);
     return result;
+  }
+  public float getBalance() {
+    return dataManager.getBalance();
+  }
+  public List<TimeSlot> getAvailableTimeSlots(Meal meal) {
+    return dataManager.getAvailableTimeSlots(meal);
+  }
+  public List<FoodItem> getFoodItems(Meal meal) {
+    return dataManager.getFoodItems(meal);
+  }
+  public List<Ticket> getTickets() {
+    return dataManager.getTickets();
+  }
+  public List<FoodItem> getTicketItems(Ticket ticket) {
+    return dataManager.getTicketItems(ticket);
+  }
+  public List<Transaction> getTransactionHistory() {
+    return dataManager.getTransactionHistory();
+  }
+  public BuyResult buy(TimeSlot slot, List<FoodItem> foodItems) {
+    return context.buy(slot, foodItems);
+  }
+  public RefundResult refund(Ticket ticket) {
+    return context.refund(ticket);
+  }
+  public ReviewResult review(Ticket ticket, int rating,
+                             String comment) {
+    return context.review(ticket, rating, comment);
+  }
+  public BalanceTopOffResult topOffBalance(float value) {
+    return context.topOffBalance(value);
+  }
+  public Meal getMeal(LocalDate date, MealPeriod period) {
+    return dataManager.getMeal(date, period);
   }
 }

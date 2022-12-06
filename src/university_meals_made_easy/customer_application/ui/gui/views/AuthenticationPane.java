@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.ui.gui.AlertBox;
 import university_meals_made_easy.customer_application.model.ModelManager;
+import university_meals_made_easy.customer_application.model.data.result.LoginResult;
 import university_meals_made_easy.customer_application.model.fsm.State;
 
 
@@ -69,7 +70,7 @@ public class AuthenticationPane extends BorderPane {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
 
     btnLogin.setOnAction(actionEvent -> {
-      if(!manager.login(usernameField.getText())) {
+      if(manager.login(usernameField.getText()) != LoginResult.SUCCESS) {
         AlertBox alertBox = new AlertBox("Invalid" , "Invalid Username");
         alertBox.show();
       }

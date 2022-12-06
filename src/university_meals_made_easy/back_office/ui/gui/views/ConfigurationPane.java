@@ -89,7 +89,14 @@ public class ConfigurationPane extends BorderPane {
    */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
-
+    btnConfirm.setOnAction(actionEvent -> {
+      try {
+        Integer.parseInt(capacityTextField.getText());
+        // call model manager methods
+      } catch (NumberFormatException e) {
+        // inform user that they have introduced something other than a number
+      }
+    });
   }
 
   /**

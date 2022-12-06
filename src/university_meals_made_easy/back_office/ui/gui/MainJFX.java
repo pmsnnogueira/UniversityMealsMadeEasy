@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import university_meals_made_easy.Logger;
 import university_meals_made_easy.back_office.model.ModelManager;
 import university_meals_made_easy.back_office.model.data.DataManager;
-import university_meals_made_easy.customer_application.model.data.DatabaseManager;
+import university_meals_made_easy.back_office.model.data.DatabaseManager;
 
 import java.sql.SQLException;
 

@@ -1,8 +1,17 @@
 package university_meals_made_easy.customer_application.model.fsm.state;
 
 import university_meals_made_easy.customer_application.model.data.DataManager;
+import university_meals_made_easy.customer_application.model.data.result.*;
 import university_meals_made_easy.customer_application.model.fsm.IState;
 import university_meals_made_easy.customer_application.model.fsm.State;
+import university_meals_made_easy.database.tables.FoodItem;
+import university_meals_made_easy.database.tables.Meal.Meal;
+import university_meals_made_easy.database.tables.Meal.MealPeriod;
+import university_meals_made_easy.database.tables.TimeSlot;
+import university_meals_made_easy.database.tables.transaction.Ticket;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Abstract class that implements all methods of the state machine in a default manner
@@ -35,8 +44,8 @@ public abstract class StateAdapter implements IState {
    * @return
    */
   @Override
-  public boolean login(String username) {
-    return false;
+  public LoginResult login(String username) {
+    return LoginResult.FAIL;
   }
 
   /**
@@ -107,5 +116,21 @@ public abstract class StateAdapter implements IState {
   public boolean changeToTransactionHistory() {
     context.changeState(State.TRANSACTION_HISTORY);
     return true;
+  }
+  @Override
+  public BuyResult buy(TimeSlot slot, List<FoodItem> foodItems) {
+    return null;
+  }
+  @Override
+  public RefundResult refund(Ticket ticket) {
+    return null;
+  }
+  @Override
+  public ReviewResult review(Ticket ticket, int rating, String comment) {
+    return null;
+  }
+  @Override
+  public BalanceTopOffResult topOffBalance(float value) {
+    return dataManager.topOffBalance(value);
   }
 }

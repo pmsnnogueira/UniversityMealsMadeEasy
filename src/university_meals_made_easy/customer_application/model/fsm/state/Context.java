@@ -1,8 +1,17 @@
 package university_meals_made_easy.customer_application.model.fsm.state;
 
 import university_meals_made_easy.customer_application.model.data.DataManager;
+import university_meals_made_easy.customer_application.model.data.result.*;
 import university_meals_made_easy.customer_application.model.fsm.IState;
 import university_meals_made_easy.customer_application.model.fsm.State;
+import university_meals_made_easy.database.tables.FoodItem;
+import university_meals_made_easy.database.tables.Meal.Meal;
+import university_meals_made_easy.database.tables.Meal.MealPeriod;
+import university_meals_made_easy.database.tables.TimeSlot;
+import university_meals_made_easy.database.tables.transaction.Ticket;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Class that keeps the context for the different states
@@ -49,7 +58,7 @@ public class Context {
    * @param username
    * @return
    */
-  public boolean login(String username) {
+  public LoginResult login(String username) {
     return state.login(username);
   }
 
@@ -100,5 +109,17 @@ public class Context {
    */
   public boolean changeToTransactionHistory() {
     return state.changeToTransactionHistory();
+  }
+  public BuyResult buy(TimeSlot slot, List<FoodItem> foodItems) {
+    return state.buy(slot, foodItems);
+  }
+  public RefundResult refund(Ticket ticket) {
+    return state.refund(ticket);
+  }
+  public ReviewResult review(Ticket ticket, int rating, String comment) {
+    return state.review(ticket, rating, comment);
+  }
+  public BalanceTopOffResult topOffBalance(float value) {
+    return state.topOffBalance(value);
   }
 }
