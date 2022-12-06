@@ -13,7 +13,6 @@ class LoggerTest {
                         Logger.createInstance(null);
                 });
         }
-
         @Test
         @DisplayName("Should throw 'UnsupportedOperationException' if different from null")
         void loggerNotnull(){
@@ -22,7 +21,6 @@ class LoggerTest {
                         Logger.createInstance();
                 });
         }
-
         @Test
         @DisplayName("Should throw 'IllegalArgumentException' if filename is blank")
         void fileNameBlank(){
@@ -30,7 +28,6 @@ class LoggerTest {
                         Logger.createInstance(" ");
                 });
         }
-
         @Test
         @DisplayName("Should throw 'UnsupportedOperationException' " +
                 "if an instance of logger is already created")
@@ -40,7 +37,6 @@ class LoggerTest {
                         Logger.createInstance("instance");
                 });
         }
-
         @Test
         @DisplayName("Should not throw any exception if able to create instance successfully")
         void instanceCreatedSuccefully(){
@@ -49,7 +45,6 @@ class LoggerTest {
                 });
 
         }
-
         @Test
         @DisplayName("Should throw 'UnsupportedOperationException' if logger equals null")
         void throwsIfLoggerNull(){
@@ -57,14 +52,12 @@ class LoggerTest {
                      Logger logger= Logger.getInstance();
                 });
         }
-
         @Test
         @DisplayName("Should return an Instance of Logger if previously Created")
         void returnsAnInstanceOfLogger(){
                 Logger.createInstance();
                 assertNotNull(Logger.getInstance());
         }
-
         @Test
         @DisplayName("Should throw 'NullPointerException' if tag equals null (ERROR)")
         void throwsIftagNullError(){
@@ -75,7 +68,6 @@ class LoggerTest {
                 });
 
         }
-
         @Test
         @DisplayName("Should throw 'NullPointerException' if message equals null (ERROR)")
         void throwsIfMessageNullError(){
@@ -85,7 +77,6 @@ class LoggerTest {
                         logger.error("tag",null);
                 });
         }
-
         @Test
         @DisplayName("Logs 'ERROR' correctly")
         void messageAndTagNotNullShouldLogError(){
@@ -95,7 +86,6 @@ class LoggerTest {
                         logger.error("tag","message");
                 });
         }
-
         @Test
         @DisplayName("Should throw 'NullPointerException' if message equals null (INFO)")
         void throwsIfMessageNullInfo(){
@@ -105,8 +95,6 @@ class LoggerTest {
                         logger.info("tag",null);
                 });
         }
-
-
         @Test
         @DisplayName("Should throw 'NullPointerException' if tag equals (INFO)")
         void throwsIftagNullInfo(){
@@ -116,7 +104,6 @@ class LoggerTest {
                         logger.info(null,"message");
                 });
         }
-
         @Test
         @DisplayName("Logs 'INFO' correctly")
         void messageAndTagNotNullShouldLogInfo(){
@@ -127,7 +114,6 @@ class LoggerTest {
                 });
 
         }
-
         @Test
         @DisplayName("Should close bufferedWriter if different from null")
         void bufferedWriterIsNotNull(){
