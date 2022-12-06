@@ -12,6 +12,10 @@ import javafx.scene.text.Font;
 import university_meals_made_easy.customer_application.model.ModelManager;
 import university_meals_made_easy.customer_application.model.fsm.State;
 
+/**
+ * This class is capable of show the users tickets
+ * @version 1.0
+ */
 public class MyTicketsPane extends BorderPane {
   private final ModelManager manager;
 
@@ -19,7 +23,13 @@ public class MyTicketsPane extends BorderPane {
   Button btnRefund;
   Label mealPriceLabel;
 
-
+  /**
+   * Constructor for class MyTicketsPane that receives and save the modelManager,
+   * Create views and all the aesthetic,
+   * Controls the user actions,
+   * Update the Root panel visibility
+   * @param manager
+   */
   public MyTicketsPane(ModelManager manager) {
     this.manager = manager;
     createViews();
@@ -27,6 +37,10 @@ public class MyTicketsPane extends BorderPane {
     update();
   }
 
+  /**
+   * Method with every details to be possible show user meals
+   * with day, meal period, meal elements.
+   */
   private void createViews() {
     Label title = new Label("My Tickets");
     title.setFont(Font.font(50));
@@ -58,11 +72,20 @@ public class MyTicketsPane extends BorderPane {
 
   }
 
+
+  /**
+   * The registerHandlers method can control the users actions,
+   * and can update the content of the Vbox with every meals from a specific day
+   */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
 
   }
 
+  /**
+   * The update method can update the content with meals
+   * for a specific day
+   */
   private void update() {
     this.setVisible(manager.getState() == State.TICKETS_CONSULTATION);
     mealItemsListView.getItems().clear();

@@ -8,6 +8,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import university_meals_made_easy.customer_application.model.ModelManager;
 
+/**
+ * The BalancePane class is called when the user clicks to add balance.
+ * @version 1.0
+ */
 public class BalancePane extends BorderPane {
   private final ModelManager manager;
 
@@ -15,6 +19,14 @@ public class BalancePane extends BorderPane {
   Label balanceLabel;
   Button btnAdd;
 
+
+  /**
+   * Constructor for class BalancePane that receives and save the modelManager,
+   * Create views and all the aesthetic,
+   * Controls the user actions,
+   * Update the Root panel visibility
+   * @param manager
+   */
   public BalancePane(ModelManager manager) {
     this.manager = manager;
 
@@ -23,6 +35,15 @@ public class BalancePane extends BorderPane {
     update();
   }
 
+  /**
+   * The createViews method is capable of create all the content for the adding balance like
+   *   Groups,
+   *   Vbox,
+   *   Lists,
+   *   Buttons,
+   *   Labels,
+   *   And all the aesthetic,
+   */
   private void createViews() {
     usernameLabel = new Label("username");
     usernameLabel.setFont(Font.font(30));
@@ -37,6 +58,11 @@ public class BalancePane extends BorderPane {
     this.setPadding(new Insets(30));
   }
 
+
+  /**
+   * The registerHandlers method can control the users actions,
+   * and can increment the user balance
+   */
   private void registerHandlers() {
     btnAdd.setOnAction(actionEvent -> {
       Dialog<ButtonType> dialog = new Dialog<>();
@@ -49,6 +75,8 @@ public class BalancePane extends BorderPane {
     });
   }
 
+  /**
+   */
   private void update() {
 
   }

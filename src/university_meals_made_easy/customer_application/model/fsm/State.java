@@ -3,6 +3,9 @@ package university_meals_made_easy.customer_application.model.fsm;
 import university_meals_made_easy.customer_application.model.data.DataManager;
 import university_meals_made_easy.customer_application.model.fsm.state.*;
 
+/**
+ * Enum state class for state machine
+ */
 public enum State {
   AUTHENTICATION,
   MAIN_MENU,
@@ -12,6 +15,13 @@ public enum State {
   REVIEWAL,
   TRANSACTION_HISTORY;
 
+  /**
+   * Returns proper enum
+   * @param dataManager
+   * @param context
+   * @return
+   * @throws NullPointerException
+   */
   public IState getState(DataManager dataManager, Context context)
       throws NullPointerException {
     return (switch (this) {

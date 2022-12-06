@@ -6,22 +6,45 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import university_meals_made_easy.back_office.ui.gui.AlertBox;
 import university_meals_made_easy.customer_application.model.ModelManager;
 import university_meals_made_easy.customer_application.model.fsm.State;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ *Order Meal Pane ->
+ *A class that is capable of implement every input in order a meal functionality,
+ *It Creates, show and control the users inputs
+ *@version 1.0
+*/
 public class OrderMealPane extends BorderPane {
   private final ModelManager manager;
   ChoiceBox<String> dayChoiceBox, periodChoiceBox;
   Label totalPriceLabel;
+
   Button btnBuy;
 
+
+  /**
+   * Constructor for class OrderMealPane that receives and save the modelManager
+   * Create views and all the aesthetic
+   * Update the Root panel visibility
+   * @param manager
+   */
   public OrderMealPane(ModelManager manager) {
     this.manager = manager;
-    createViews();
-    registerHandlers();
-    update();
+    createViews();   //Initialize View
+    registerHandlers(); //Control View
+    update();        //Update visibility
   }
 
+
+  /**
+    *View with every details to be possible order a meal
+    *with day, meal period, meal elements and timeSlots
+    */
   private void createViews() {
     Label title = new Label("Order Meal");
     title.setFont(Font.font(50));
@@ -39,6 +62,7 @@ public class OrderMealPane extends BorderPane {
 
     String[] st = { "Arroz Branco - 0.5€", "Feijão Preto - 0.7€", "Entremeada - 0.8€" };
 
+    // Create and show every meal items for that specific day and meal period
     VBox leftVBox = new VBox(new Label("Choose your meal Items"));
     for (String s : st) {
       CheckBox c = new CheckBox(s);
@@ -47,7 +71,7 @@ public class OrderMealPane extends BorderPane {
     }
     leftVBox.setAlignment(Pos.CENTER);
 
-
+    //Create and show available time slots for that specific meal period
     ToggleGroup toggleGroup = new ToggleGroup();
     RadioButton r1 = new RadioButton("12:00 - 12:15");
     r1.setToggleGroup(toggleGroup);
@@ -56,14 +80,16 @@ public class OrderMealPane extends BorderPane {
     RadioButton r3 = new RadioButton("12:30 - 12:45");
     r3.setToggleGroup(toggleGroup);
 
-    VBox centerVBox = new VBox(new Label("Pick a timeslot"), r1, r2, r3);
-    centerVBox.setAlignment(Pos.CENTER);
+    VBox centerVBox = new VBox(new Label("Pick a timeslot"), r1, r2, r3); //Pick time Slot label
+    centerVBox.setAlignment(Pos.CENTER); //Center the timeSlot label in Vbox
 
-    totalPriceLabel = new Label("Total Price: ");
-    btnBuy = new Button("Buy");
-    VBox rightVBox = new VBox(totalPriceLabel, btnBuy);
-    rightVBox.setAlignment(Pos.CENTER);
+    //Create and show VBox with total Price for the specific choosed meal
+    totalPriceLabel = new Label("Total Price: "); //Create totalPriceLabel
+    btnBuy = new Button("Buy"); //Create the buy Button
+    VBox rightVBox = new VBox(totalPriceLabel, btnBuy); //Insert into Vbox the total price label with a buy button
+    rightVBox.setAlignment(Pos.CENTER); //Align items to the center of the rightVBox
 
+    //Set dimensions of meal items, timeSlot and buy box
     leftVBox.setPrefWidth(300);
     centerVBox.setPrefWidth(300);
     rightVBox.setPrefWidth(300);
@@ -73,11 +99,24 @@ public class OrderMealPane extends BorderPane {
     this.setCenter(centerHBox);
   }
 
+  /**
+   *registerHanlers control all the information when user clicks in buy button
+   */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
+    btnBuy.setOnAction(actionEvent -> {
+
+      AlertBox alertBox = new AlertBox("Success" , "You can found your tickets under 'My Tickets'");
+
+      alertBox.show();
+
+    });
 
   }
 
+  /**
+    *Function capble of change the Visibility of OrderMealPane
+    */
   private void update() {
     this.setVisible(manager.getState() == State.MEAL_ORDERING);
   }

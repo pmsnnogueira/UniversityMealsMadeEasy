@@ -11,15 +11,30 @@ import university_meals_made_easy.customer_application.model.ModelManager;
 import university_meals_made_easy.customer_application.model.fsm.State;
 import university_meals_made_easy.customer_application.ui.gui.views.*;
 
+/**
+ * The RootPane Class creates, show and redirect the user choices to the specific menu.,
+ * It contains a lot of things like
+ *    A navbar with every feature for the BackOffice users
+ *    Controls the user choices and redirect to the specific panel
+ *    Can change the visibility
+ * @version 1.0
+ */
 public class RootPane extends BorderPane {
   private final ModelManager manager;
-
   VBox leftButtonsVBox;
+
   ToggleButton btnMainMenu, btnOrderMeal, btnMenus, btnMyTickets;
   ToggleButton btnReviewMeal, btnHistory, btnLogout;
   ToggleGroup tgTabButtons;
   BalancePane balancePane;
 
+  /**
+   * Constructor for class RootPane that receives and save the modelManager,
+   * Create views and all the aesthetic,
+   * Controls the user actions,
+   * Update the Root panel visibility
+   * @param manager
+   */
   public RootPane(ModelManager manager) {
     this.manager = manager;
 
@@ -28,6 +43,14 @@ public class RootPane extends BorderPane {
     update();
   }
 
+  /**
+   * Method that is capable of create all the content for the navBar like
+   *   Groups,
+   *   Vbox,
+   *   Buttons,
+   *   Labels,
+   *   And all the aesthetic,
+   */
   private void createViews() {
     tgTabButtons = new ToggleGroup();
     Label title1 = new Label("University Meals");
@@ -88,6 +111,12 @@ public class RootPane extends BorderPane {
         new MyTicketsPane(manager), new ReviewMealPane(manager),
         new HistoryPane(manager)));
   }
+
+
+  /**
+   * The registerHandlers method can control the users actions,
+   * and can redirect the user to the specific operation
+   */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
 
@@ -113,6 +142,11 @@ public class RootPane extends BorderPane {
       manager.logout();
     });
   }
+
+  /**
+   * The update method can control the RootPane visibility,
+   * and can change if the navbar is visible
+   */
   private void update() {
     if(manager.getState() == State.AUTHENTICATION) {
       leftButtonsVBox.setVisible(false);

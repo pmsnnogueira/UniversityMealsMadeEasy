@@ -23,6 +23,7 @@ public class MealReviewsPane extends BorderPane {
   }
 
   private void createViews() {
+    
     Label title = new Label("Meal Reviews");
     title.setFont(Font.font(50));
     VBox topVBox = new VBox(title);

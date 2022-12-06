@@ -11,6 +11,7 @@ import university_meals_made_easy.back_office.model.fsm.State;
 public class MainMenuPane extends BorderPane {
   private final ModelManager manager;
 
+
   public MainMenuPane(ModelManager manager) {
     this.manager = manager;
 
