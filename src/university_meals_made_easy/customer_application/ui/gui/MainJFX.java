@@ -4,8 +4,12 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import university_meals_made_easy.Logger;
 import university_meals_made_easy.customer_application.model.ModelManager;
 import university_meals_made_easy.customer_application.model.data.DataManager;
+import university_meals_made_easy.customer_application.model.data.DatabaseManager;
+
+import java.sql.SQLException;
 
 /**
  * The MainJFX Class calls the backoffice application
@@ -13,6 +17,7 @@ import university_meals_made_easy.customer_application.model.data.DataManager;
  */
 public class MainJFX extends Application {
   private final ModelManager manager;
+  private final static String TAG = "MainJFX";
 
   /**
    * Constructor for MainJFX that creates a new ModelManager with a Data Manager
@@ -46,7 +51,13 @@ public class MainJFX extends Application {
     stage.setScene(scene);
     stage.setTitle("UniversityMealsMadeEasy");
     stage.show();
-    stage.setOnCloseRequest(windowEvent -> Platform.exit());
+    stage.setOnCloseRequest(windowEvent -> {
+      try {
+        DatabaseManager.getInstance().close();
+      } catch (SQLException ignored) {}
+      Logger.getInstance().close();
+      Platform.exit();
+    });
   }
 
 }

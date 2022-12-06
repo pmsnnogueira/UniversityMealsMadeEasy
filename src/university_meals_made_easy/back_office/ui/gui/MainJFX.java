@@ -4,8 +4,12 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import university_meals_made_easy.Logger;
 import university_meals_made_easy.back_office.model.ModelManager;
 import university_meals_made_easy.back_office.model.data.DataManager;
+import university_meals_made_easy.customer_application.model.data.DatabaseManager;
+
+import java.sql.SQLException;
 
 /**
  * Responsible class for launching the graphical user interface
@@ -39,7 +43,13 @@ public class MainJFX extends Application {
     stage.setScene(scene);
     stage.setTitle("UniversityMealsMadeEasy");
     stage.show();
-    stage.setOnCloseRequest(windowEvent -> Platform.exit());
+    stage.setOnCloseRequest(windowEvent -> {
+      try {
+        DatabaseManager.getInstance().close();
+      } catch (SQLException ignored) {}
+      Logger.getInstance().close();
+      Platform.exit();
+    });
   }
 
 }
