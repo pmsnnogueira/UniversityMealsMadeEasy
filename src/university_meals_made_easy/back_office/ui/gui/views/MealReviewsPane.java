@@ -11,9 +11,17 @@ import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.model.ModelManager;
 import university_meals_made_easy.back_office.model.fsm.State;
 
+/**
+ * This view is a border pane that contains information about meal reviews
+ */
 public class MealReviewsPane extends BorderPane {
   private final ModelManager manager;
-  ListView<String> previousMealsListView;
+  private ListView<String> previousMealsListView;
+
+  /**
+   * Constructor for MealReviewsPane
+   * @param manager
+   */
   public MealReviewsPane(ModelManager manager) {
     this.manager = manager;
 
@@ -22,6 +30,11 @@ public class MealReviewsPane extends BorderPane {
     update();
   }
 
+  /**
+   * This method is called once this object is created, it will configure every
+   * aspect of the gui, where all buttons, text field and other elements appear.
+   * In this case a ListView
+   */
   private void createViews() {
     
     Label title = new Label("Meal Reviews");
@@ -52,12 +65,20 @@ public class MealReviewsPane extends BorderPane {
     this.setCenter(centerHBox);
   }
 
+  /**
+   * this method is called after creating the view.
+   * It's responsible to register all handlers and listeners
+   * so the elements can be used.
+   */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
   }
 
+  /**
+   * this method is responsible to update the entire view everytime it
+   * needs after a change
+   */
   private void update() {
-
     this.setVisible(manager.getState() == State.REVIEWS_CONSULTATION);
   }
 }

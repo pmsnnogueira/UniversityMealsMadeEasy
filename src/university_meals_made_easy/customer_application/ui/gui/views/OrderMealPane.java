@@ -10,9 +10,6 @@ import university_meals_made_easy.back_office.ui.gui.AlertBox;
 import university_meals_made_easy.customer_application.model.ModelManager;
 import university_meals_made_easy.customer_application.model.fsm.State;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  *Order Meal Pane ->
  *A class that is capable of implement every input in order a meal functionality,
@@ -21,10 +18,10 @@ import java.util.Date;
 */
 public class OrderMealPane extends BorderPane {
   private final ModelManager manager;
-  ChoiceBox<String> dayChoiceBox, periodChoiceBox;
-  Label totalPriceLabel;
-
-  Button btnBuy;
+  private DatePicker datePicker;
+  private ChoiceBox<String> periodChoiceBox;
+  private Label totalPriceLabel;
+  private Button btnBuy;
 
 
   /**
@@ -48,19 +45,21 @@ public class OrderMealPane extends BorderPane {
   private void createViews() {
     Label title = new Label("Order Meal");
     title.setFont(Font.font(50));
-    dayChoiceBox = new ChoiceBox<>();
-    dayChoiceBox.setPrefWidth(300);
+    datePicker = new DatePicker();
+    datePicker.setPrefWidth(150);
     periodChoiceBox = new ChoiceBox<>();
     periodChoiceBox.setPrefWidth(300);
     periodChoiceBox.getItems().addAll("Lunch", "Dinner");
-    HBox topHBox = new HBox(new Label("Select Day: "), dayChoiceBox, new Label("Select Period: "), periodChoiceBox);
+    HBox topHBox = new HBox(new Label("Select Day: "), datePicker,
+        new Label("Select Period: "), periodChoiceBox);
     topHBox.setSpacing(50);
     topHBox.setAlignment(Pos.CENTER);
     VBox topVBox = new VBox(title, topHBox);
     topVBox.setAlignment(Pos.CENTER);
     this.setTop(topVBox);
 
-    String[] st = { "Arroz Branco - 0.5€", "Feijão Preto - 0.7€", "Entremeada - 0.8€" };
+    String[] st = { "Arroz Branco - 0.5€", "Feijão Preto - 0.7€",
+        "Entremeada - 0.8€" };
 
     // Create and show every meal items for that specific day and meal period
     VBox leftVBox = new VBox(new Label("Choose your meal Items"));
@@ -105,9 +104,8 @@ public class OrderMealPane extends BorderPane {
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
     btnBuy.setOnAction(actionEvent -> {
-
-      AlertBox alertBox = new AlertBox("Success" , "You can found your tickets under 'My Tickets'");
-
+      AlertBox alertBox = new AlertBox("Success" , "You can found your tickets " +
+          "under 'My Tickets'");
       alertBox.show();
 
     });

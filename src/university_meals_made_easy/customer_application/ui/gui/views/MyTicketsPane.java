@@ -19,9 +19,9 @@ import university_meals_made_easy.customer_application.model.fsm.State;
 public class MyTicketsPane extends BorderPane {
   private final ModelManager manager;
 
-  ListView<String> ticketListView, mealItemsListView;
-  Button btnRefund;
-  Label mealPriceLabel;
+  private ListView<String> ticketListView, mealItemsListView;
+  private Button btnRefund;
+  private Label mealPriceLabel;
 
   /**
    * Constructor for class MyTicketsPane that receives and save the modelManager,

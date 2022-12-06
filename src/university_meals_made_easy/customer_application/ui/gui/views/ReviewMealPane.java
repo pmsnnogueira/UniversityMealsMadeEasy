@@ -17,11 +17,11 @@ import university_meals_made_easy.customer_application.model.fsm.State;
  */
 public class ReviewMealPane extends BorderPane {
   private final ModelManager manager;
-  ListView<String> ticketListView, mealItemsListView;
-  Button btnSubmitReview;
-  Label rateThisMealLabel;
-  TextArea observationsTextArea;
-  Slider rateSlider;
+  private ListView<String> ticketListView, mealItemsListView;
+  private Button btnSubmitReview;
+  private Label rateThisMealLabel;
+  private TextArea observationsTextArea;
+  private Slider rateSlider;
 
   /**
    * Constructor for class ReviewMealPane that receives and save the modelManager,

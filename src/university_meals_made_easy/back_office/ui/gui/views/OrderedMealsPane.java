@@ -9,12 +9,20 @@ import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.model.ModelManager;
 import university_meals_made_easy.back_office.model.fsm.State;
 
+/**
+ * This view is a border pane that contains information about the meals that
+ * were bought by customers
+ */
 public class OrderedMealsPane extends BorderPane {
   private final ModelManager manager;
-  DatePicker datePicker;
-  ChoiceBox<String> periodChoiceBox;
-  ListView<String> timeslotListView;
+  private DatePicker datePicker;
+  private ChoiceBox<String> periodChoiceBox;
+  private ListView<String> timeslotListView;
 
+  /**
+   * Constructor for OrderedMealsPane
+   * @param manager
+   */
   public OrderedMealsPane(ModelManager manager) {
     this.manager = manager;
 
@@ -23,6 +31,11 @@ public class OrderedMealsPane extends BorderPane {
     update();
   }
 
+  /**
+   * This method is called once this object is created, it will configure every
+   * aspect of the gui, where all buttons, text field and other elements appear.
+   * In this case a DatePicker, a ChoiceBox and a ListView
+   */
   private void createViews() {
     Label title = new Label("Ordered Meals");
     title.setFont(Font.font(50));
@@ -58,12 +71,20 @@ public class OrderedMealsPane extends BorderPane {
 
   }
 
+  /**
+   * this method is called after creating the view.
+   * It's responsible to register all handlers and listeners
+   * so the elements can be used.
+   */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
   }
 
+  /**
+   * this method is responsible to update the entire view everytime it
+   * needs after a change
+   */
   private void update() {
-
     this.setVisible(manager.getState() == State.ORDERED_MEALS_CONSULTATION);
   }
 }

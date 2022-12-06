@@ -21,12 +21,12 @@ import university_meals_made_easy.customer_application.ui.gui.views.*;
  */
 public class RootPane extends BorderPane {
   private final ModelManager manager;
-  VBox leftButtonsVBox;
 
-  ToggleButton btnMainMenu, btnOrderMeal, btnMenus, btnMyTickets;
-  ToggleButton btnReviewMeal, btnHistory, btnLogout;
-  ToggleGroup tgTabButtons;
-  BalancePane balancePane;
+  private VBox leftButtonsVBox;
+  private ToggleButton btnMainMenu, btnOrderMeal, btnMenus, btnMyTickets;
+  private ToggleButton btnReviewMeal, btnHistory, btnLogout;
+  private ToggleGroup tgTabButtons;
+  private BalancePane balancePane;
 
   /**
    * Constructor for class RootPane that receives and save the modelManager,

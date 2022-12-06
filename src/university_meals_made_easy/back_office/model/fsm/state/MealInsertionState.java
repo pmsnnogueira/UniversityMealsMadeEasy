@@ -10,10 +10,23 @@ import university_meals_made_easy.database.tables.Meal.MealPeriod;
 
 import java.time.LocalDate;
 
+/**
+ * MealInsertionState class
+ * this state is used to insert meals
+ */
 public class MealInsertionState extends StateAdapter {
+  /**
+   * MealInsertionState Constructor
+   * @param dataManager
+   * @param context
+   */
   public MealInsertionState(DataManager dataManager, Context context) {
     super(dataManager, context);
   }
+
+  /**
+   * @return state
+   */
   @Override
   public State getState() {
     return State.MEAL_INSERTION;

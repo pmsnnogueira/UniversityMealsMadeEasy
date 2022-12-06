@@ -11,6 +11,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * DataManager
+ */
 public class DataManager {
   public Meal getMeal(LocalDate date, MealPeriod period) {
     try {

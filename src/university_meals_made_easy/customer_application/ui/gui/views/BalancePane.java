@@ -15,9 +15,9 @@ import university_meals_made_easy.customer_application.model.ModelManager;
 public class BalancePane extends BorderPane {
   private final ModelManager manager;
 
-  Label usernameLabel;
-  Label balanceLabel;
-  Button btnAdd;
+  private Label usernameLabel;
+  private Label balanceLabel;
+  private Button btnAdd;
 
 
   /**

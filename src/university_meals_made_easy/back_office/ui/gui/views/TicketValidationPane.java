@@ -12,11 +12,19 @@ import university_meals_made_easy.back_office.model.ModelManager;
 import university_meals_made_easy.back_office.model.fsm.State;
 import university_meals_made_easy.back_office.ui.gui.AlertBox;
 
+/**
+ * This view is a border pane where it is possible to validate meal tickets
+ * using the ticket id
+*/
 public class TicketValidationPane extends BorderPane {
   private final ModelManager manager;
-  TextField ticketIdTextField;
-  Button btnValidateTicket;
+  private TextField ticketIdTextField;
+  private Button btnValidateTicket;
 
+  /**
+   * Constructor for TicketValidationPane
+   * @param manager
+   */
   public TicketValidationPane(ModelManager manager) {
     this.manager = manager;
 
@@ -25,13 +33,17 @@ public class TicketValidationPane extends BorderPane {
     update();
   }
 
+  /**
+   * This method is called once this object is created, it will configure every
+   * aspect of the gui, where all buttons, text field and other elements appear.
+   * In this case a TextField and a Button
+   */
   private void createViews() {
     Label title = new Label("Validate Ticket");
     title.setFont(Font.font(50));
     VBox topVBox = new VBox(title);
     topVBox.setAlignment(Pos.CENTER);
     this.setTop(topVBox);
-
 
     ticketIdTextField = new TextField();
     ticketIdTextField.setPromptText("Ticket Id");
@@ -47,21 +59,32 @@ public class TicketValidationPane extends BorderPane {
 
   }
 
+  /**
+   * this method is called after creating the view.
+   * It's responsible to register all handlers and listeners
+   * so the elements can be used.
+   */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
 
     btnValidateTicket.setOnAction(actionEvent -> {
       boolean result = true; //manager.validateTicket(ticketIdTextField.getText());
+      AlertBox alertBox;
       if(result) {
-        AlertBox alertBox = new AlertBox("Success", "Ticket has " +
+        alertBox = new AlertBox("Success", "Ticket has " +
             "been validated");
       } else {
-        AlertBox alertBox = new AlertBox("Error", "Failed to " +
+        alertBox = new AlertBox("Error", "Failed to " +
             "validate ticket");
       }
+      alertBox.show();
     });
   }
 
+  /**
+   * this method is responsible to update the entire view everytime it
+   * needs after a change
+   */
   private void update() {
     this.setVisible(manager.getState() == State.TICKET_VALIDATION);
   }

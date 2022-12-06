@@ -17,8 +17,8 @@ import university_meals_made_easy.customer_application.model.fsm.State;
 public class AuthenticationPane extends BorderPane {
   private final ModelManager manager;
 
-  TextField usernameField;
-  Button btnLogin;
+  private TextField usernameField;
+  private Button btnLogin;
 
 
   /**

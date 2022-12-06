@@ -3,6 +3,9 @@ package university_meals_made_easy.back_office.model.fsm;
 import university_meals_made_easy.back_office.model.data.DataManager;
 import university_meals_made_easy.back_office.model.fsm.state.*;
 
+/**
+ * Enum with all fsm state values
+ */
 public enum State {
   MAIN_MENU,
   TICKET_VALIDATION,
@@ -11,6 +14,13 @@ public enum State {
   MEAL_INSERTION,
   CONFIGURATION;
 
+  /**
+   * Factory for creating new states
+   * @param dataManager
+   * @param context
+   * @return
+   * @throws NullPointerException
+   */
   public IState getState(DataManager dataManager, Context context)
       throws NullPointerException {
     return (switch (this) {

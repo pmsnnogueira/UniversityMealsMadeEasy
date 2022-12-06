@@ -9,17 +9,22 @@ import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.model.ModelManager;
 import university_meals_made_easy.back_office.model.fsm.State;
 
-import java.util.List;
-
+/**
+ * This view is a border pane that creates a view where it is possible to
+ * insert food items to a meal.
+ */
 public class MealInsertionPane extends BorderPane {
   private final ModelManager manager;
-  List<String> mealItems;
-  DatePicker datePicker;
-  ChoiceBox<String> periodChoiceBox;
-  TextField mealItemName, mealItemPrice;
-  ListView<String> currentMealItemsListView;
-  Button btnInsert, btnReset;
+  private DatePicker datePicker;
+  private ChoiceBox<String> periodChoiceBox;
+  private TextField mealItemName, mealItemPrice;
+  private ListView<String> currentMealItemsListView;
+  private Button btnInsert, btnReset;
 
+  /**
+   * Constructor for MealInsertionPane
+   * @param manager
+   */
   public MealInsertionPane(ModelManager manager) {
     this.manager = manager;
 
@@ -28,6 +33,12 @@ public class MealInsertionPane extends BorderPane {
     update();
   }
 
+  /**
+   * This method is called once this object is created, it will configure every
+   * aspect of the gui, where all buttons, text field and other elements appear.
+   * In this case a DatePicker, a ChoiceBox, 2 TextFields, a  ListView and 2
+   * Buttons
+   */
   private void createViews() {
 
     Label title = new Label("Meal Insertion");
@@ -50,8 +61,9 @@ public class MealInsertionPane extends BorderPane {
     mealItemPrice.setPrefWidth(300);
     mealItemPrice.setPromptText("0.5");
     btnInsert = new Button("Insert");
-    VBox leftVBox = new VBox(chooseDay, datePicker, periodChoiceBox,
-        itemNameLabel, mealItemName, itemPriceLabel, mealItemPrice, btnInsert);
+    VBox leftVBox = new VBox(chooseDay, datePicker, choosePeriodLabel,
+        periodChoiceBox, itemNameLabel, mealItemName, itemPriceLabel,
+        mealItemPrice, btnInsert);
     leftVBox.setPrefHeight(800);
     leftVBox.setAlignment(Pos.CENTER);
 
@@ -72,12 +84,20 @@ public class MealInsertionPane extends BorderPane {
     this.setCenter(centerHBox);
   }
 
+  /**
+   * this method is called after creating the view.
+   * It's responsible to register all handlers and listeners
+   * so the elements can be used.
+   */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
   }
 
+  /**
+   * this method is responsible to update the entire view everytime it
+   * needs after a change
+   */
   private void update() {
-
     this.setVisible(manager.getState() == State.MEAL_INSERTION);
   }
 }

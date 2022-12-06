@@ -10,14 +10,22 @@ import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.model.ModelManager;
 import university_meals_made_easy.back_office.ui.gui.views.*;
 
+/**
+ * This is the base window pane for the gui, everything on this gui is on
+ * top of it
+ */
 public class RootPane extends BorderPane {
   private final ModelManager manager;
 
-  VBox leftButtonsVBox;
-  ToggleButton btnMainMenu, btnTicketValidation, btnOrderedMeals, btnMealReviews;
-  ToggleButton btnMealInsertion, btnConfiguration;
-  ToggleGroup tgTabButtons;
+  private VBox leftButtonsVBox;
+  private ToggleButton btnMainMenu, btnTicketValidation, btnOrderedMeals, btnMealReviews;
+  private ToggleButton btnMealInsertion, btnConfiguration;
+  private ToggleGroup tgTabButtons;
 
+  /**
+   * Constructor for RootPane
+   * @param manager
+   */
   public RootPane(ModelManager manager) {
     this.manager = manager;
 
@@ -26,6 +34,12 @@ public class RootPane extends BorderPane {
     update();
   }
 
+  /**
+   * This method is called once this object is created, it will configure every
+   * aspect of the gui, where all buttons, text field and other elements appear.
+   * In this case all navigation Buttons on the left, account balance and all
+   * the views stacked on top of each other
+   */
   private void createViews() {
     tgTabButtons = new ToggleGroup();
     Label title1 = new Label("University Meals");
@@ -78,6 +92,12 @@ public class RootPane extends BorderPane {
         new MealReviewsPane(manager), new MealInsertionPane(manager),
         new ConfigurationPane(manager)));
   }
+
+  /**
+   * this method is called after creating the view.
+   * It's responsible to register all handlers and listeners
+   * so the elements can be used.
+   */
   private void registerHandlers() {
     btnMainMenu.setOnAction(actionEvent -> {
       manager.changeToMainMenu();

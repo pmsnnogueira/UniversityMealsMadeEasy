@@ -1,6 +1,5 @@
 package university_meals_made_easy.customer_application.ui.gui.views;
 
-import com.sun.media.jfxmedia.events.NewFrameEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -14,12 +13,6 @@ import javafx.scene.text.Font;
 import university_meals_made_easy.customer_application.model.ModelManager;
 import university_meals_made_easy.customer_application.model.fsm.State;
 
-import java.time.LocalDateTime;
-
-/**
- * The MenusPane class is called when the user clicks to watch the weekly menu
- * @version 1.0
- */
 public class MenusPane extends BorderPane {
   private final ModelManager manager;
   ChoiceBox<String> periodChoiceBox;

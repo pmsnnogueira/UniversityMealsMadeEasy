@@ -9,16 +9,24 @@ import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.model.ModelManager;
 import university_meals_made_easy.back_office.model.fsm.State;
 
+/**
+ * This view is a border pane that contains information about the capacity of
+ * a certain timeslot. It is also possible to change it
+ */
 public class ConfigurationPane extends BorderPane {
   private final ModelManager manager;
 
-  DatePicker datePicker;
-  ChoiceBox<String> periodChoiceBox;
-  ListView<String> timeslotListView;
-  Button btnConfirm;
-  TextField capacityTextField;
+  private DatePicker datePicker;
+  private ChoiceBox<String> periodChoiceBox;
+  private ListView<String> timeslotListView;
+  private Button btnConfirm;
+  private TextField capacityTextField;
 
 
+  /**
+   * Constructor for Configuration Pane
+   * @param manager
+   */
   public ConfigurationPane(ModelManager manager) {
     this.manager = manager;
 
@@ -27,6 +35,12 @@ public class ConfigurationPane extends BorderPane {
     update();
   }
 
+  /**
+   * This method is called once this object is created, it will configure every
+   * aspect of the gui, where all buttons, text field and other elements appear.
+   * In this case a DatePicker, a ChoiceBox, a ListView, a TextField and a
+   * Button will be shown on the screen
+   */
   private void createViews() {
     Label title = new Label("Configuration");
     title.setFont(Font.font(50));
@@ -36,7 +50,8 @@ public class ConfigurationPane extends BorderPane {
 
     Label chooseDayLabel = new Label("Choose day");
     datePicker = new DatePicker();
-    Label choosePerioLabel = new Label("Choose Period");
+    datePicker.setPrefWidth(300);
+    Label choosePeriodLabel = new Label("Choose Period");
     periodChoiceBox = new ChoiceBox<>();
     periodChoiceBox.getItems().addAll("Lunch", "Dinner");
     periodChoiceBox.setPrefWidth(200);
@@ -44,7 +59,7 @@ public class ConfigurationPane extends BorderPane {
     timeslotListView = new ListView<>();
     timeslotListView.setPrefHeight(700);
     timeslotListView.setPrefWidth(200);
-    VBox leftVBox = new VBox(chooseDayLabel, datePicker, choosePerioLabel,
+    VBox leftVBox = new VBox(chooseDayLabel, datePicker, choosePeriodLabel,
         periodChoiceBox, timeslotLabel, timeslotListView);
     leftVBox.setAlignment(Pos.CENTER);
     leftVBox.setPrefWidth(500);
@@ -67,10 +82,20 @@ public class ConfigurationPane extends BorderPane {
 
   }
 
+  /**
+   * this method is called after creating the view.
+   * It's responsible to register all handlers and listeners
+   * so the elements can be used.
+   */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
+
   }
 
+  /**
+   * this method is responsible to update the entire view everytime it
+   * needs after a change
+   */
   private void update() {
     this.setVisible(manager.getState() == State.CONFIGURATION);
   }

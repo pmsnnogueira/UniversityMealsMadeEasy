@@ -10,10 +10,20 @@ import university_meals_made_easy.database.tables.TimeSlot;
 
 import java.time.LocalDate;
 
+/**
+ * StateAdapter class
+ * this class implements common methods between states
+ */
 public abstract class StateAdapter implements IState {
   protected final DataManager dataManager;
   protected final Context context;
 
+  /**
+   * StateAdapter Constructor
+   * @param dataManager
+   * @param context
+   * @throws NullPointerException
+   */
   public StateAdapter(DataManager dataManager, Context context)
       throws NullPointerException {
     if (dataManager == null)
@@ -23,6 +33,10 @@ public abstract class StateAdapter implements IState {
     this.dataManager = dataManager;
     this.context = context;
   }
+
+  /**
+   * method that changes the current state to configuration state on the fsm
+   */
   @Override
   public State getState() {
     return null;
@@ -31,22 +45,45 @@ public abstract class StateAdapter implements IState {
   public void changeToConfiguration() {
     context.changeState(State.CONFIGURATION);
   }
+
+  /**
+   * method that changes the current state to main menu state on the fsm
+   */
   @Override
   public void changeToMainMenu() {
     context.changeState(State.MAIN_MENU);
   }
+
+  /**
+   * method that changes the current state to meal insertion state on the fsm
+   */
   @Override
   public void changeToMealInsertion() {
     context.changeState(State.MEAL_INSERTION);
   }
+
+  /**
+   * method that changes the current state to ordered meals consultation
+   * state on the fsm
+   */
   @Override
   public void changeToOrderedMealsConsultation() {
     context.changeState(State.ORDERED_MEALS_CONSULTATION);
   }
+
+  /**
+   * method that changes the current state to reviews consultation state
+   * on the fsm
+   */
   @Override
   public void changeToReviewsConsultation() {
     context.changeState(State.REVIEWS_CONSULTATION);
   }
+
+  /**
+   * method that changes the current state to ticket validation state on
+   * the fsm
+   */
   @Override
   public void changeToTicketValidation() {
     context.changeState(State.TICKET_VALIDATION);

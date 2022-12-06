@@ -18,7 +18,7 @@ import university_meals_made_easy.customer_application.model.fsm.State;
 public class HistoryPane extends BorderPane {
   private final ModelManager manager;
 
-  ListView<String> transactionHistoryListView;
+  private ListView<String> transactionHistoryListView;
 
 
   /**

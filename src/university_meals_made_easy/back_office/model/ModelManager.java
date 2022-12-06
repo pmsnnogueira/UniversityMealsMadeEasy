@@ -15,6 +15,9 @@ import java.util.List;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+/**
+ * ModelManager class
+ */
 public class ModelManager {
   public static final String PROP_STATE = "state";
 
@@ -22,6 +25,11 @@ public class ModelManager {
   private final Context context;
   private final PropertyChangeSupport pcs;
 
+  /**
+   * ModelManager Constructor
+   * @param dataManager
+   * @throws NullPointerException
+   */
   public ModelManager(DataManager dataManager)
       throws NullPointerException {
     if (dataManager == null)
@@ -31,32 +39,66 @@ public class ModelManager {
     pcs = new PropertyChangeSupport(this);
   }
 
+  /**
+   * This method is used to add new listeners to the property change support
+   * @param property
+   * @param listener
+   */
   public void addPropertyChangeListener(String property, PropertyChangeListener listener) {
     pcs.addPropertyChangeListener(property, listener);
   }
+
+  /**
+   * This method returns the current state of the fsm
+   * @return state
+   */
   public State getState() {
     return context.getState();
   }
+
+  /**
+   * This method is used to change the current state of fsm to Configuration
+   */
   public void changeToConfiguration() {
     context.changeToConfiguration();
     pcs.firePropertyChange(PROP_STATE,null, null);
   }
+
+  /**
+   * This method is used to change the current state of fsm to MainMenu
+   */
   public void changeToMainMenu() {
     context.changeToMainMenu();
     pcs.firePropertyChange(PROP_STATE,null, null);
   }
+
+  /**
+   * This method is used to change the current state of fsm to MealInsertion
+   */
   public void changeToMealInsertion() {
     context.changeToMealInsertion();
     pcs.firePropertyChange(PROP_STATE,null, null);
   }
+
+  /**
+   * This method is used to change the current state of fsm to MealsConsultation
+   */
   public void changeToOrderedMealsConsultation() {
     context.changeToOrderedMealsConsultation();
     pcs.firePropertyChange(PROP_STATE,null, null);
   }
+
+  /**
+   * This method is used to change the current state of fsm to ReviewsConsultation
+   */
   public void changeToReviewsConsultation() {
     context.changeToReviewsConsultation();
     pcs.firePropertyChange(PROP_STATE,null, null);
   }
+
+  /**
+   * This method is used to change the current state of fsm to TicketValidation
+   */
   public void changeToTicketValidation() {
     context.changeToTicketValidation();
     pcs.firePropertyChange(PROP_STATE,null, null);
