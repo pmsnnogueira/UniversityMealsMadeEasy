@@ -138,7 +138,7 @@ public class DatabaseManager {
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               app_user_id INTEGER REFERENCES app_user(id),
               datetime_of_topoff TEXT NOT NULL,
-              top_off_value INTEGER NOT NULL
+              top_off_value REAL NOT NULL
           );
           """);
     }

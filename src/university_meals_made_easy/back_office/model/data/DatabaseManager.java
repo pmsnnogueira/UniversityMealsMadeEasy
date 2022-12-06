@@ -1,15 +1,18 @@
 package university_meals_made_easy.back_office.model.data;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class DatabaseManager {
   public final static String databaseFilePath = "university_meals_made_easy.db";
   private static DatabaseManager instance;
   private final Connection connection;
+  private final ReentrantLock mutex;
 
   private DatabaseManager() throws SQLException {
     boolean existedBefore;
@@ -28,6 +31,7 @@ public class DatabaseManager {
       createReviewTable();
       createTopOffTable();
     }
+    mutex = new ReentrantLock();
   }
   public static DatabaseManager getInstance() throws SQLException {
     if (instance == null)
@@ -138,12 +142,14 @@ public class DatabaseManager {
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               app_user_id INTEGER REFERENCES app_user(id),
               datetime_of_topoff TEXT NOT NULL,
-              top_off_value INTEGER NOT NULL
+              top_off_value REAL NOT NULL
           );
           """);
     }
   }
-  public void close() throws SQLException {
-    connection.close();
+  public void close() {
+    try {
+      connection.close();
+    } catch (SQLException ignored) {}
   }
 }

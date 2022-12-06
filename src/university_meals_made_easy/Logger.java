@@ -8,9 +8,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Logger {
+  public static final DateTimeFormatter timeFormatter;
+  public static final DateTimeFormatter dateFormatter;
+  public static final DateTimeFormatter dateTimeFormatter;
   private static Logger logger;
   private final BufferedWriter bufferedWriter;
 
+  static {
+    dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+    dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
+  }
   public static void createInstance() throws UnsupportedOperationException {
     if (logger != null)
       throw new UnsupportedOperationException("instance already created");
@@ -47,16 +55,14 @@ public class Logger {
   }
   private void log(String type, String tag, String message) {
     String output = String.format("[%s %s] %s: %s\n",
-        LocalDateTime.now().format(DateTimeFormatter
-            .ofPattern("HH:mm:ss dd/MM/yyyy")), type, tag, message);
+        LocalDateTime.now().format(dateTimeFormatter), type, tag, message);
 
     if (bufferedWriter != null)
       try {
         bufferedWriter.write(output);
       } catch (IOException e) {
         System.out.printf("[ERROR %s] logger: couldn't log\n",
-            LocalDateTime.now().format(DateTimeFormatter
-                .ofPattern("HH:mm:ss dd/MM/yyyy")));
+            LocalDateTime.now().format(dateTimeFormatter));
       }
     else
       System.out.printf(output);
