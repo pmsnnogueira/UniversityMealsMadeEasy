@@ -16,13 +16,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class DatabaseManager {
   public final static String databaseFilePath = "university_meals_made_easy.db";
   private static DatabaseManager instance;
   private final Connection connection;
-  private final ReentrantLock mutex;
 
   private DatabaseManager() throws SQLException {
     boolean existedBefore;
@@ -41,7 +39,6 @@ public class DatabaseManager {
       createReviewTable();
       createTopOffTable();
     }
-    mutex = new ReentrantLock();
   }
   public static DatabaseManager getInstance() throws SQLException {
     if (instance == null)
