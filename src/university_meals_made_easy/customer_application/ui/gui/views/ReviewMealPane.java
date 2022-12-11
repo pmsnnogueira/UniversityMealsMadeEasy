@@ -69,10 +69,12 @@ public class ReviewMealPane extends BorderPane {
     observationsTextArea.setPrefHeight(200);
     observationsTextArea.setPrefWidth(200);
     btnSubmitReview = new Button("Reviews");
-    btnSubmitReview.setPrefWidth(200);
+    btnSubmitReview.setPrefWidth(300);
     btnSubmitReview.setPrefHeight(100);
     VBox rightVBox = new VBox(rateThisMealLabel, rateSlider, observationsTextArea, btnSubmitReview);
     rightVBox.setAlignment(Pos.CENTER);
+    rightVBox.setPrefWidth(500);
+    rightVBox.setSpacing(30);
     Label leftLabel = new Label("Select a ticket for details");
     VBox leftVBox = new VBox(leftLabel, ticketListView);
     leftVBox.setAlignment(Pos.CENTER);
@@ -82,6 +84,7 @@ public class ReviewMealPane extends BorderPane {
     HBox centerHBox = new HBox(leftVBox, centerVBox, rightVBox);
     centerHBox.setAlignment(Pos.CENTER);
     centerHBox.setPadding(new Insets(100));
+    centerHBox.setSpacing(30);
     this.setCenter(centerHBox);
 
   }

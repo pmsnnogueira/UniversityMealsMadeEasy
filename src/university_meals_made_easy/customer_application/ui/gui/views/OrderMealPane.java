@@ -10,6 +10,8 @@ import university_meals_made_easy.back_office.ui.gui.AlertBox;
 import university_meals_made_easy.customer_application.model.ModelManager;
 import university_meals_made_easy.customer_application.model.fsm.State;
 
+import java.time.LocalDate;
+
 /**
  *Order Meal Pane ->
  *A class that is capable of implement every input in order a meal functionality,
@@ -45,11 +47,12 @@ public class OrderMealPane extends BorderPane {
   private void createViews() {
     Label title = new Label("Order Meal");
     title.setFont(Font.font(50));
-    datePicker = new DatePicker();
+    datePicker = new DatePicker(LocalDate.now());
     datePicker.setPrefWidth(150);
     periodChoiceBox = new ChoiceBox<>();
     periodChoiceBox.setPrefWidth(300);
     periodChoiceBox.getItems().addAll("Lunch", "Dinner");
+    periodChoiceBox.getSelectionModel().selectFirst();
     HBox topHBox = new HBox(new Label("Select Day: "), datePicker,
         new Label("Select Period: "), periodChoiceBox);
     topHBox.setSpacing(50);

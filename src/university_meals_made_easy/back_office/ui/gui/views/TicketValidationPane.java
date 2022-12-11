@@ -1,7 +1,5 @@
 package university_meals_made_easy.back_office.ui.gui.views;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,8 +13,6 @@ import university_meals_made_easy.back_office.model.data.result.TicketValidation
 import university_meals_made_easy.back_office.model.fsm.State;
 import university_meals_made_easy.back_office.ui.gui.AlertBox;
 
-import javax.print.attribute.standard.PresentationDirection;
-import java.text.DecimalFormat;
 
 /**
  * This view is a border pane where it is possible to validate meal tickets
@@ -29,7 +25,7 @@ public class TicketValidationPane extends BorderPane {
 
   /**
    * Constructor for TicketValidationPane
-   * @param manager
+   * @param manager ModelManager instance
    */
   public TicketValidationPane(ModelManager manager) {
     this.manager = manager;
@@ -75,7 +71,7 @@ public class TicketValidationPane extends BorderPane {
     ticketIdTextField.textProperty().addListener(
         (observable, oldValue, newValue) -> {
       if (!newValue.matches("\\d*")) {
-        ticketIdTextField.setText(newValue.replaceAll("[^\\d]", ""));
+        ticketIdTextField.setText(newValue.replaceAll("\\D", ""));
       }
     });
     btnValidateTicket.setOnAction(actionEvent -> {

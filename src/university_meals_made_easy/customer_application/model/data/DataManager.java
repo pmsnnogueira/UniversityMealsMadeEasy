@@ -20,6 +20,7 @@ import java.util.List;
 public class DataManager {
   private final static String TAG = "DataManager";
   private int userId;
+  private String username;
 
   /**
    * Method for login of user according to username
@@ -38,6 +39,7 @@ public class DataManager {
       loginResult = DatabaseManager.getInstance().login(username);
       if (loginResult == LoginResult.SUCCESS) {
         userId = DatabaseManager.getInstance().getId(username);
+        this.username = username;
         if (userId != -1)
           return LoginResult.SUCCESS;
       } else
@@ -137,5 +139,9 @@ public class DataManager {
     } catch (SQLException e) {
       return ReviewResult.UNEXPECTED_ERROR;
     }
+  }
+
+  public String getUsername() {
+    return username;
   }
 }

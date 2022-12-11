@@ -192,8 +192,15 @@ public class DatabaseManager {
           SET balance = %f
           WHERE id = %d;
           """, resultSet.getFloat("balance") + value, userId));
+      statement.execute(String.format("""
+          INSERT INTO top_off
+          VALUES (NULL, %d, '%s', %f);
+          """, userId, LocalDateTime.now().format(Logger.dateTimeFormatter),
+          value));
+      System.out.println("added balance");
       return BalanceTopOffResult.SUCCESS;
     } catch (SQLException e) {
+      e.printStackTrace();
       return BalanceTopOffResult.UNEXPECTED_ERROR;
     }
   }
@@ -493,15 +500,16 @@ public class DatabaseManager {
   }
   public LoginResult login(String username) {
     try (Statement statement = connection.createStatement()) {
-      if (statement.executeQuery(String.format("""
+      if (!statement.executeQuery(String.format("""
           SELECT *
           FROM app_user
           WHERE username = '%s';WW
-          """, username)).next())
+          """, username)).next()) {
         statement.execute(String.format("""
               INSERT INTO app_user
               VALUES (NULL, '%s', 0);
               """, username));
+      }
       return LoginResult.SUCCESS;
     } catch (SQLException e) {
       return LoginResult.UNEXPECTED_ERROR;

@@ -35,7 +35,7 @@ public class ConfigurationPane extends BorderPane {
 
   /**
    * Constructor for Configuration Pane
-   * @param manager
+   * @param manager ModelManager instance
    */
   public ConfigurationPane(ModelManager manager) {
     this.manager = manager;
@@ -59,7 +59,7 @@ public class ConfigurationPane extends BorderPane {
     this.setTop(topVBox);
 
     Label chooseDayLabel = new Label("Choose day");
-    datePicker = new DatePicker();
+    datePicker = new DatePicker(LocalDate.now());
     datePicker.setPrefWidth(300);
     Label choosePeriodLabel = new Label("Choose Period");
     periodChoiceBox = new ChoiceBox<>();
@@ -104,17 +104,13 @@ public class ConfigurationPane extends BorderPane {
     capacityTextField.textProperty().addListener(
         (observable, oldValue, newValue) -> {
           if (!newValue.matches("\\d*")) {
-            capacityTextField.setText(newValue.replaceAll("[^\\d]", ""));
+            capacityTextField.setText(newValue.replaceAll("\\D", ""));
           }
         });
 
-    datePicker.setOnAction(actionEvent -> {
-      listTimeSlots();
-    });
+    datePicker.setOnAction(actionEvent -> listTimeSlots());
 
-    periodChoiceBox.setOnAction(actionEvent -> {
-      listTimeSlots();
-    });
+    periodChoiceBox.setOnAction(actionEvent -> listTimeSlots());
 
     timeslotListView.getSelectionModel().selectedItemProperty().addListener(
         (a, b,c) -> {

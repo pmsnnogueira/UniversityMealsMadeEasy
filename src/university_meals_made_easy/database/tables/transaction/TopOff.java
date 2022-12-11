@@ -20,7 +20,7 @@ public class TopOff extends Transaction {
     this.id = id;
     this.appUserId = appUserId;
     try {
-      this.dateTime = LocalTime.parse(dateTimeString, Logger.timeFormatter);
+      this.dateTime = LocalTime.parse(dateTimeString, Logger.dateTimeFormatter);
     } catch (DateTimeParseException e) {
       throw new IllegalArgumentException(
           "date time string must have valid format");
@@ -41,5 +41,10 @@ public class TopOff extends Transaction {
   }
   public float getValue() {
     return value;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("Top off balance: %d on %s", value, getDateTimeAsString());
   }
 }

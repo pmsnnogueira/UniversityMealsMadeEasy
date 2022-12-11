@@ -57,4 +57,9 @@ public class Review extends Transaction {
   public String getComment() {
     return comment;
   }
+
+  @Override
+  public String toString() {
+    return String.format("Reviewed meal: %d on %s", ticketId, getDateTimeAsString());
+  }
 }

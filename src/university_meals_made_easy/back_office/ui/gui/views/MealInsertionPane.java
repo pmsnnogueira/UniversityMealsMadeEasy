@@ -37,7 +37,7 @@ public class MealInsertionPane extends BorderPane {
 
   /**
    * Constructor for MealInsertionPane
-   * @param manager
+   * @param manager ModelManager instance
    */
   public MealInsertionPane(ModelManager manager) {
     this.manager = manager;
@@ -62,7 +62,7 @@ public class MealInsertionPane extends BorderPane {
     this.setTop(topVBox);
 
     Label chooseDay = new Label("Choose Day");
-    datePicker = new DatePicker();
+    datePicker = new DatePicker(LocalDate.now());
     Label choosePeriodLabel = new Label("Select period");
     periodChoiceBox = new ChoiceBox<>();
     periodChoiceBox.getItems().addAll("Lunch", "Dinner");
@@ -106,13 +106,9 @@ public class MealInsertionPane extends BorderPane {
    */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
-    datePicker.setOnAction( actionEvent -> {
-      listCurrentFoodItems();
-    });
+    datePicker.setOnAction( actionEvent -> listCurrentFoodItems());
 
-    periodChoiceBox.setOnAction(actionEvent -> {
-      listCurrentFoodItems();
-    });
+    periodChoiceBox.setOnAction(actionEvent -> listCurrentFoodItems());
 
     btnInsert.setOnAction(actionEvent -> {
       String name = mealItemName.getText();
@@ -152,7 +148,7 @@ public class MealInsertionPane extends BorderPane {
   }
 
   /**
-   * function that takes the datepicker value and selected period and fills
+   * function that takes the date picker value and selected period and fills
    * the listview with the right food items
    */
   private void listCurrentFoodItems() {
@@ -180,7 +176,7 @@ public class MealInsertionPane extends BorderPane {
   /**
    * This method handles the result of creating a new meal
    * It will create an alert box depending on the result
-   * @param result
+   * @param result MealInsertionResult
    */
   private void handleMealInsertionResult(MealInsertionResult result) {
     if(result == null)

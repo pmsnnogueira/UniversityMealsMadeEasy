@@ -6,7 +6,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import university_meals_made_easy.back_office.ui.gui.AlertBox;
 import university_meals_made_easy.customer_application.model.ModelManager;
+import university_meals_made_easy.customer_application.model.data.result.BalanceTopOffResult;
+
+import java.util.Optional;
 
 /**
  * The BalancePane class is called when the user clicks to add balance.
@@ -64,6 +68,8 @@ public class BalancePane extends BorderPane {
    * and can increment the user balance
    */
   private void registerHandlers() {
+    manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
+
     btnAdd.setOnAction(actionEvent -> {
       Dialog<ButtonType> dialog = new Dialog<>();
       ButtonType loginButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
@@ -71,14 +77,44 @@ public class BalancePane extends BorderPane {
       dialog.setContentText("Add balance");
       TextField textFieldBalance = new TextField();
       dialog.getDialogPane().setContent(textFieldBalance);
-      dialog.show();
+      Optional<ButtonType> result = dialog.showAndWait();
+      if(result.isPresent()) {
+        if(result.get() != ButtonType.CANCEL) {
+          String balance = textFieldBalance.getText();
+          if(balance == null || balance.isBlank() || balance.isEmpty())
+            return;
+          try {
+            float value = Float.parseFloat(balance);
+            BalanceTopOffResult result1 = manager.topOffBalance(value);
+            handleTopOffResult(result1);
+          } catch (Exception ignored) {
+          }
+        }
+      }
     });
   }
 
+  private void handleTopOffResult(BalanceTopOffResult result) {
+    if(result == null)
+      return;
+    AlertBox alertBox = switch (result) {
+      case SUCCESS -> new AlertBox("Success",
+          "Balance has been added");
+      case UNEXPECTED_ERROR -> new AlertBox("Error",
+          "Unexpected Error");
+      case USER_DOES_NOT_EXIST -> new AlertBox("Error",
+          "This user does not exist");
+    };
+    alertBox.show();
+  }
+
   /**
+   * this method updates the view of this pane by placing the right username
+   * and balance of the user
    */
   private void update() {
-
+    usernameLabel.setText(manager.getUsername());
+    balanceLabel.setText(manager.getBalance() + " €");
   }
 
 }

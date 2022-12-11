@@ -8,7 +8,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.model.ModelManager;
 import university_meals_made_easy.back_office.model.fsm.State;
@@ -27,7 +26,7 @@ public class MealReviewsPane extends BorderPane {
 
   /**
    * Constructor for MealReviewsPane
-   * @param manager
+   * @param manager ModelManager instance
    */
   public MealReviewsPane(ModelManager manager) {
     this.manager = manager;

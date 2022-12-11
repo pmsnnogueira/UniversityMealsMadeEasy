@@ -17,7 +17,7 @@ public class MainMenuPane extends BorderPane {
 
   /**
    * Constructor for MainMenu
-   * @param manager
+   * @param manager ModelManager instance
    */
   public MainMenuPane(ModelManager manager) {
     this.manager = manager;

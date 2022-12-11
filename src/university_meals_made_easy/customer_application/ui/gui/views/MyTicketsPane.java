@@ -55,9 +55,11 @@ public class MyTicketsPane extends BorderPane {
     mealItemsListView.setPrefWidth(600);
     mealPriceLabel = new Label("Meal Price: ");
     btnRefund = new Button("Refund");
-    btnRefund.setPrefWidth(200);
+    btnRefund.setPrefWidth(300);
     btnRefund.setPrefHeight(100);
     VBox rightVBox = new VBox(mealPriceLabel, btnRefund);
+    rightVBox.setPrefWidth(500);
+    rightVBox.setSpacing(30);
     rightVBox.setAlignment(Pos.CENTER);
     Label leftLabel = new Label("Select a ticket for details");
     VBox leftVBox = new VBox(leftLabel, ticketListView);
@@ -68,6 +70,7 @@ public class MyTicketsPane extends BorderPane {
     HBox centerHBox = new HBox(leftVBox, centerVBox, rightVBox);
     centerHBox.setAlignment(Pos.CENTER);
     centerHBox.setPadding(new Insets(100));
+    centerHBox.setSpacing(30);
     this.setCenter(centerHBox);
 
   }

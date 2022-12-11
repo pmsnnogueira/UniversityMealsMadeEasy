@@ -29,7 +29,7 @@ public class OrderedMealsPane extends BorderPane {
 
   /**
    * Constructor for OrderedMealsPane
-   * @param manager
+   * @param manager ModelManager instance
    */
   public OrderedMealsPane(ModelManager manager) {
     this.manager = manager;
@@ -51,7 +51,7 @@ public class OrderedMealsPane extends BorderPane {
     topVBox.setAlignment(Pos.CENTER);
     this.setTop(topVBox);
     Label chooseDayLabel = new Label("Choose day");
-    datePicker = new DatePicker();
+    datePicker = new DatePicker(LocalDate.now());
     Label choosePerioLabel = new Label("Choose Period");
     periodChoiceBox = new ChoiceBox<>();
     periodChoiceBox.getItems().addAll("Lunch", "Dinner");
@@ -88,13 +88,9 @@ public class OrderedMealsPane extends BorderPane {
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
 
-    datePicker.setOnAction(actionEvent -> {
-      listTimeSlots();
-    });
+    datePicker.setOnAction(actionEvent -> listTimeSlots());
 
-    periodChoiceBox.setOnAction(actionEvent -> {
-      listTimeSlots();
-    });
+    periodChoiceBox.setOnAction(actionEvent -> listTimeSlots());
 
     timeslotListView.getSelectionModel().selectedItemProperty().addListener(
         (a, b,c) -> {

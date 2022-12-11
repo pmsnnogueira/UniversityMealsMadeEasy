@@ -79,6 +79,9 @@ public class ModelManager {
     return result;
   }
 
+  public String getUsername() {
+    return dataManager.getUsername();
+  }
   /**
    * This method is used to change the current state of fsm to MainMenu
    * @return result
@@ -167,7 +170,9 @@ public class ModelManager {
     return context.review(ticket, rating, comment);
   }
   public BalanceTopOffResult topOffBalance(float value) {
-    return context.topOffBalance(value);
+    BalanceTopOffResult result = context.topOffBalance(value);
+    pcs.firePropertyChange(PROP_STATE, null, null);
+    return result;
   }
   public Meal getMeal(LocalDate date, MealPeriod period) {
     return dataManager.getMeal(date, period);

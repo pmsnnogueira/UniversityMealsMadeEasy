@@ -63,4 +63,9 @@ public class Ticket extends Transaction {
       return null;
     return dateTimeOfValidation.format(Logger.dateTimeFormatter);
   }
+
+  @Override
+  public String toString() {
+    return String.format("Bought ticket: on %s", getDateTimeOfPurchaseAsString());
+  }
 }

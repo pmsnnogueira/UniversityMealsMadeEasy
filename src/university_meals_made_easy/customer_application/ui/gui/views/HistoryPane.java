@@ -9,6 +9,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import university_meals_made_easy.customer_application.model.ModelManager;
 import university_meals_made_easy.customer_application.model.fsm.State;
+import university_meals_made_easy.database.tables.transaction.Transaction;
+
+import java.util.List;
 
 
 /**
@@ -18,7 +21,7 @@ import university_meals_made_easy.customer_application.model.fsm.State;
 public class HistoryPane extends BorderPane {
   private final ModelManager manager;
 
-  private ListView<String> transactionHistoryListView;
+  private ListView<Transaction> transactionHistoryListView;
 
 
   /**
@@ -76,6 +79,9 @@ public class HistoryPane extends BorderPane {
   private void update() {
     this.setVisible(manager.getState() == State.TRANSACTION_HISTORY);
     transactionHistoryListView.getItems().clear();
-    transactionHistoryListView.getItems().add("Empty List");
+    List<Transaction> transactions = manager.getTransactionHistory();
+    if(transactions == null)
+      return;
+    transactionHistoryListView.getItems().addAll(transactions);
   }
 }

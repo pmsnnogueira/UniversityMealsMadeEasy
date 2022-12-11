@@ -42,4 +42,9 @@ public class Refund extends Transaction {
   public String getDateTimeAsString() {
     return dateTime.format(Logger.dateTimeFormatter);
   }
+
+  @Override
+  public String toString() {
+    return String.format("Refund ticket: %d on %s", ticketId, getDateTimeAsString());
+  }
 }

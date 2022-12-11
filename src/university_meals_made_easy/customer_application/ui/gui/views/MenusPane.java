@@ -53,6 +53,7 @@ public class MenusPane extends BorderPane {
     Label selectPeriodLabel = new Label("Period: ");
     periodChoiceBox = new ChoiceBox<>();
     periodChoiceBox.getItems().addAll("Lunch", "Dinner");
+    periodChoiceBox.getSelectionModel().selectFirst();
     btnPrevious = new Button("Previous");
     btnNext = new Button("Next");
     mealElementsListView = new ListView<>();
