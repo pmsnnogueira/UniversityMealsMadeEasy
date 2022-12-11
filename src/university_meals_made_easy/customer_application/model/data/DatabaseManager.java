@@ -197,7 +197,6 @@ public class DatabaseManager {
           VALUES (NULL, %d, '%s', %f);
           """, userId, LocalDateTime.now().format(Logger.dateTimeFormatter),
           value));
-      System.out.println("added balance");
       return BalanceTopOffResult.SUCCESS;
     } catch (SQLException e) {
       e.printStackTrace();

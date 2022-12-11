@@ -130,7 +130,7 @@ public class ConfigurationPane extends BorderPane {
           selectedTimeSlot, Integer.parseInt(capacity));
       AlertBox alertBox = switch (result) {
         case SUCCESS -> new AlertBox("Success",
-            "New Meals has been inserted");
+            "Time slot capacity has been changed");
         case UNEXPECTED_ERROR -> new AlertBox("Error",
             "Unexpected Error");
         case ALREADY_TOO_MANY_BOUGHT_TICKETS -> new AlertBox("Error",
@@ -153,7 +153,6 @@ public class ConfigurationPane extends BorderPane {
     if(selectedMeal == null)
       return;
     List<TimeSlot> timeSlots = manager.getTimeSlots(selectedMeal);
-    System.out.println(timeSlots);
     if(timeSlots == null)
       return;
     timeslotListView.getItems().addAll(timeSlots);
@@ -165,5 +164,6 @@ public class ConfigurationPane extends BorderPane {
    */
   private void update() {
     this.setVisible(manager.getState() == State.CONFIGURATION);
+    listTimeSlots();
   }
 }

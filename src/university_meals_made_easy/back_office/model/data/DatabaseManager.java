@@ -422,11 +422,11 @@ public class DatabaseManager {
                                         LocalDate date)
       throws NullPointerException {
     String[] lunchTimeSlotTimes =
-        {"12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30",
-            "13:45", "14:00", "14:15", "14:30", "14:45", "15:00"};
+        {"12:00:00", "12:15:00", "12:30:00", "12:45:00", "13:00:00", "13:15:00", "13:30:00",
+            "13:45:00", "14:00:00", "14:15:00", "14:30:00", "14:45:00", "15:00:00"};
     String[] dinnerTimeSlotTimes =
-        {"19:30", "19:45", "20:00", "20:15", "20:30", "20:45", "21:00",
-            "21:15", "21:30", "21:45", "22:00", "22:15", "22:30"};
+        {"19:30:00", "19:45:00", "20:00:00", "20:15:00", "20:30:00", "20:45:00", "21:00:00",
+            "21:15:00", "21:30:00", "21:45:00", "22:00:00", "22:15:00", "22:30:00"};
     String[] mealTimeSlotsTimes;
     int mealId;
 
@@ -452,11 +452,12 @@ public class DatabaseManager {
         mealTimeSlotsTimes = lunchTimeSlotTimes;
       else
         mealTimeSlotsTimes = dinnerTimeSlotTimes;
-      for (int i = 0; i < mealTimeSlotsTimes.length - 1; i++)
+      for (int i = 0; i < mealTimeSlotsTimes.length - 1; i++) {
         statement.execute(String.format("""
-        INSERT INTO time_slot
-        VALUES (NULL, %d, '%s', '%s', NULL);
-        """, mealId, mealTimeSlotsTimes[i], mealTimeSlotsTimes[i + 1]));
+            INSERT INTO time_slot
+            VALUES (NULL, %d, '%s', '%s', 30);
+            """, mealId, mealTimeSlotsTimes[i], mealTimeSlotsTimes[i + 1]));
+      }
       return MealInsertionResult.SUCCESS;
     } catch (SQLException e) {
       e.printStackTrace();

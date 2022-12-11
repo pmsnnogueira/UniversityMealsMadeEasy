@@ -144,5 +144,6 @@ public class OrderedMealsPane extends BorderPane {
    */
   private void update() {
     this.setVisible(manager.getState() == State.ORDERED_MEALS_CONSULTATION);
+    listTimeSlots();
   }
 }

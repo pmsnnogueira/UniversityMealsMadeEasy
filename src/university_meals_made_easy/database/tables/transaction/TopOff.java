@@ -2,13 +2,13 @@ package university_meals_made_easy.database.tables.transaction;
 
 import university_meals_made_easy.Logger;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
 public class TopOff extends Transaction {
   private final int id;
   private final int appUserId;
-  private final LocalTime dateTime;
+  private final LocalDateTime dateTime;
   private final float value;
 
   public TopOff(int id, int appUserId, String dateTimeString, float value)
@@ -20,7 +20,7 @@ public class TopOff extends Transaction {
     this.id = id;
     this.appUserId = appUserId;
     try {
-      this.dateTime = LocalTime.parse(dateTimeString, Logger.dateTimeFormatter);
+      this.dateTime = LocalDateTime.parse(dateTimeString, Logger.dateTimeFormatter);
     } catch (DateTimeParseException e) {
       throw new IllegalArgumentException(
           "date time string must have valid format");
@@ -33,7 +33,7 @@ public class TopOff extends Transaction {
   public int getAppUserId() {
     return appUserId;
   }
-  public LocalTime getDateTime() {
+  public LocalDateTime getDateTime() {
     return dateTime;
   }
   public String getDateTimeAsString() {
@@ -45,6 +45,6 @@ public class TopOff extends Transaction {
 
   @Override
   public String toString() {
-    return String.format("Top off balance: %d on %s", value, getDateTimeAsString());
+    return String.format("Top off balance: %f on %s", value, getDateTimeAsString());
   }
 }

@@ -1,7 +1,6 @@
 package university_meals_made_easy.back_office.model;
 
 import university_meals_made_easy.back_office.model.data.DataManager;
-import university_meals_made_easy.back_office.model.data.DatabaseManager;
 import university_meals_made_easy.back_office.model.data.result.*;
 import university_meals_made_easy.back_office.model.fsm.State;
 import university_meals_made_easy.back_office.model.fsm.state.Context;
@@ -11,12 +10,10 @@ import university_meals_made_easy.database.tables.Meal.MealPeriod;
 import university_meals_made_easy.database.tables.TimeSlot;
 import university_meals_made_easy.database.tables.transaction.Review;
 
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.List;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * ModelManager class
@@ -140,6 +137,8 @@ public class ModelManager {
   }
   public TimeSlotCapacityConfiguringResult configureCapacity(TimeSlot slot,
                                                              int capacity) {
-    return context.configureCapacity(slot, capacity);
+    TimeSlotCapacityConfiguringResult result = context.configureCapacity(slot, capacity);
+    pcs.firePropertyChange(PROP_STATE, null, null);
+    return result;
   }
 }
