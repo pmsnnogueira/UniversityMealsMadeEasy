@@ -57,4 +57,9 @@ public class TimeSlot {
   public int getCapacity() {
     return capacity;
   }
+
+  @Override
+  public String toString() {
+    return String.format("%s : %s", timeOfStart, timeOfEnd);
+  }
 }

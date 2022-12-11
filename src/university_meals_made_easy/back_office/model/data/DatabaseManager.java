@@ -166,7 +166,7 @@ public class DatabaseManager {
       resultSet = statement.executeQuery(String.format("""
           SELECT *
           FROM meal
-          WHERE date = '%s'
+          WHERE date_of_meal = '%s'
           AND meal_period = '%s'
           """, date.format(Logger.dateFormatter), period));
       if (resultSet.next())
@@ -414,7 +414,7 @@ public class DatabaseManager {
           SELECT *
           FROM meal
           WHERE meal_period = '%s'
-          AND date = '%s';
+          AND date_of_meal = '%s';
           """, mealPeriod, date.format(Logger.dateFormatter))).next())
         return MealInsertionResult.ALREADY_EXISTS;
       statement.execute(String.format("""
@@ -423,6 +423,7 @@ public class DatabaseManager {
           """, mealPeriod, date.format(Logger.dateFormatter)));
       return MealInsertionResult.SUCCESS;
     } catch (SQLException e) {
+      e.printStackTrace();
       return null;
     }
   }

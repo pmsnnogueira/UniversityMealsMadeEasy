@@ -29,4 +29,9 @@ public class FoodItem {
   public String getDescription() {
     return description;
   }
+
+  @Override
+  public String toString() {
+    return String.format("%s - %f",description, price);
+  }
 }

@@ -8,6 +8,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.model.ModelManager;
 import university_meals_made_easy.back_office.model.fsm.State;
+import university_meals_made_easy.database.tables.FoodItem;
+import university_meals_made_easy.database.tables.Meal.Meal;
+import university_meals_made_easy.database.tables.Meal.MealPeriod;
+import university_meals_made_easy.database.tables.TimeSlot;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * This view is a border pane that contains information about the meals that
@@ -17,7 +24,8 @@ public class OrderedMealsPane extends BorderPane {
   private final ModelManager manager;
   private DatePicker datePicker;
   private ChoiceBox<String> periodChoiceBox;
-  private ListView<String> timeslotListView;
+  private ListView<TimeSlot> timeslotListView;
+  private ScrollPane scrollPane;
 
   /**
    * Constructor for OrderedMealsPane
@@ -47,6 +55,7 @@ public class OrderedMealsPane extends BorderPane {
     Label choosePerioLabel = new Label("Choose Period");
     periodChoiceBox = new ChoiceBox<>();
     periodChoiceBox.getItems().addAll("Lunch", "Dinner");
+    periodChoiceBox.getSelectionModel().selectFirst();
     periodChoiceBox.setPrefWidth(200);
     Label timeslotLabel = new Label("Timeslot");
     timeslotListView = new ListView<>();
@@ -57,7 +66,7 @@ public class OrderedMealsPane extends BorderPane {
     leftVBox.setAlignment(Pos.CENTER);
     leftVBox.setPrefWidth(500);
     Label boughtMealsLabel = new Label("Bought Meals");
-    ScrollPane scrollPane = new ScrollPane();
+    scrollPane = new ScrollPane();
     scrollPane.setPrefHeight(800);
     scrollPane.setPrefWidth(700);
     VBox rightVBox = new VBox(boughtMealsLabel, scrollPane);
@@ -78,8 +87,61 @@ public class OrderedMealsPane extends BorderPane {
    */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
+
+    datePicker.setOnAction(actionEvent -> {
+      listTimeSlots();
+    });
+
+    periodChoiceBox.setOnAction(actionEvent -> {
+      listTimeSlots();
+    });
+
+    timeslotListView.getSelectionModel().selectedItemProperty().addListener(
+        (a, b,c) -> {
+          TimeSlot selectedTimeSlot = timeslotListView.getSelectionModel()
+              .getSelectedItem();
+          if(selectedTimeSlot == null)
+            return;
+          List<List<FoodItem>> foodItems = manager.getOrderedMealsFoodItems(
+              selectedTimeSlot);
+          VBox foodItemsContainer = new VBox();
+          foodItemsContainer.setAlignment(Pos.CENTER);
+          foodItemsContainer.setSpacing(20);
+          for(List<FoodItem> list : foodItems) {
+            VBox container = new VBox();
+            container.setAlignment(Pos.CENTER);
+            for(FoodItem foodItem : list) {
+              Label name = new Label(foodItem.getDescription());
+              Label price = new Label(foodItem.getPrice()+ "");
+              HBox foodItemHBox = new HBox(name, price);
+              foodItemHBox.setAlignment(Pos.CENTER);
+              foodItemHBox.setSpacing(5);
+              container.getChildren().add(foodItemHBox);
+            }
+            foodItemsContainer.getChildren().add(container);
+          }
+        });
   }
 
+  /**
+   * This method gets the meal from a chosen day and a period a lists all
+   * timeslots on the view
+   */
+  private void listTimeSlots() {
+    timeslotListView.getItems().clear();
+    LocalDate date = datePicker.getValue();
+    if(date == null)
+      return;
+    MealPeriod period = switch(periodChoiceBox.getValue()) {
+      case "Lunch" -> MealPeriod.LUNCH;
+      default -> MealPeriod.DINNER;
+    };
+    Meal selectedMeal = manager.getMeal(date, period);
+    List<TimeSlot> timeSlots = manager.getTimeSlots(selectedMeal);
+    if(timeSlots == null)
+      return;
+    timeslotListView.getItems().addAll(timeSlots);
+  }
   /**
    * this method is responsible to update the entire view everytime it
    * needs after a change

@@ -7,7 +7,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.model.ModelManager;
+import university_meals_made_easy.back_office.model.data.result.TimeSlotCapacityConfiguringResult;
 import university_meals_made_easy.back_office.model.fsm.State;
+import university_meals_made_easy.back_office.ui.gui.AlertBox;
+import university_meals_made_easy.database.tables.Meal.Meal;
+import university_meals_made_easy.database.tables.Meal.MealPeriod;
+import university_meals_made_easy.database.tables.TimeSlot;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * This view is a border pane that contains information about the capacity of
@@ -18,9 +26,11 @@ public class ConfigurationPane extends BorderPane {
 
   private DatePicker datePicker;
   private ChoiceBox<String> periodChoiceBox;
-  private ListView<String> timeslotListView;
+  private ListView<TimeSlot> timeslotListView;
   private Button btnConfirm;
   private TextField capacityTextField;
+
+  private TimeSlot selectedTimeSlot;
 
 
   /**
@@ -54,6 +64,7 @@ public class ConfigurationPane extends BorderPane {
     Label choosePeriodLabel = new Label("Choose Period");
     periodChoiceBox = new ChoiceBox<>();
     periodChoiceBox.getItems().addAll("Lunch", "Dinner");
+    periodChoiceBox.getSelectionModel().selectFirst();
     periodChoiceBox.setPrefWidth(200);
     Label timeslotLabel = new Label("Timeslot");
     timeslotListView = new ListView<>();
@@ -89,14 +100,67 @@ public class ConfigurationPane extends BorderPane {
    */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
-    btnConfirm.setOnAction(actionEvent -> {
-      try {
-        Integer.parseInt(capacityTextField.getText());
-        // call model manager methods
-      } catch (NumberFormatException e) {
-        // inform user that they have introduced something other than a number
-      }
+
+    capacityTextField.textProperty().addListener(
+        (observable, oldValue, newValue) -> {
+          if (!newValue.matches("\\d*")) {
+            capacityTextField.setText(newValue.replaceAll("[^\\d]", ""));
+          }
+        });
+
+    datePicker.setOnAction(actionEvent -> {
+      listTimeSlots();
     });
+
+    periodChoiceBox.setOnAction(actionEvent -> {
+      listTimeSlots();
+    });
+
+    timeslotListView.getSelectionModel().selectedItemProperty().addListener(
+        (a, b,c) -> {
+          selectedTimeSlot = timeslotListView.getSelectionModel().getSelectedItem();
+          if(selectedTimeSlot == null)
+            return;
+          capacityTextField.setText(selectedTimeSlot.getCapacity()+"");
+    });
+
+    btnConfirm.setOnAction(actionEvent -> {
+      String capacity = capacityTextField.getText();
+      if(capacity == null || capacity.isEmpty() || capacity.isBlank())
+        return;
+      if(selectedTimeSlot == null)
+        return;
+      TimeSlotCapacityConfiguringResult result = manager.configureCapacity(
+          selectedTimeSlot, Integer.parseInt(capacity));
+      AlertBox alertBox = switch (result) {
+        case SUCCESS -> new AlertBox("Success",
+            "New Meals has been inserted");
+        case UNEXPECTED_ERROR -> new AlertBox("Error",
+            "Unexpected Error");
+        case ALREADY_TOO_MANY_BOUGHT_TICKETS -> new AlertBox("Error",
+            "A lot of tickets have been bought already");
+      };
+      alertBox.show();
+    });
+  }
+
+  private void listTimeSlots() {
+    timeslotListView.getItems().clear();
+    LocalDate date = datePicker.getValue();
+    if(date == null)
+      return;
+    MealPeriod period = switch(periodChoiceBox.getValue()) {
+      case "Lunch" -> MealPeriod.LUNCH;
+      default -> MealPeriod.DINNER;
+    };
+    Meal selectedMeal = manager.getMeal(date, period);
+    if(selectedMeal == null)
+      return;
+    List<TimeSlot> timeSlots = manager.getTimeSlots(selectedMeal);
+    System.out.println(timeSlots);
+    if(timeSlots == null)
+      return;
+    timeslotListView.getItems().addAll(timeSlots);
   }
 
   /**

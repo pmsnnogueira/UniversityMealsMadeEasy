@@ -1,5 +1,7 @@
 package university_meals_made_easy.back_office.ui.gui.views;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,8 +11,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.model.ModelManager;
+import university_meals_made_easy.back_office.model.data.result.TicketValidationResult;
 import university_meals_made_easy.back_office.model.fsm.State;
 import university_meals_made_easy.back_office.ui.gui.AlertBox;
+
+import javax.print.attribute.standard.PresentationDirection;
+import java.text.DecimalFormat;
 
 /**
  * This view is a border pane where it is possible to validate meal tickets
@@ -66,18 +72,33 @@ public class TicketValidationPane extends BorderPane {
    */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
-
-    btnValidateTicket.setOnAction(actionEvent -> {
-      boolean result = true; //manager.validateTicket(ticketIdTextField.getText());
-      AlertBox alertBox;
-      if(result) {
-        alertBox = new AlertBox("Success", "Ticket has " +
-            "been validated");
-      } else {
-        alertBox = new AlertBox("Error", "Failed to " +
-            "validate ticket");
+    ticketIdTextField.textProperty().addListener(
+        (observable, oldValue, newValue) -> {
+      if (!newValue.matches("\\d*")) {
+        ticketIdTextField.setText(newValue.replaceAll("[^\\d]", ""));
       }
+    });
+    btnValidateTicket.setOnAction(actionEvent -> {
+      String id = ticketIdTextField.getText();
+      if(id == null || id.isEmpty() || id.isBlank())
+        return;
+      TicketValidationResult result = manager.validateTicket(
+          Integer.parseInt(id));
+
+      AlertBox alertBox = switch (result) {
+        case SUCCESS ->  new AlertBox("Success",
+            "Ticket has been validated");
+        case UNEXPECTED_ERROR -> new AlertBox("Error",
+            "Unexpected error");
+        case TICKET_ALREADY_VALIDATED -> new AlertBox("Error",
+            "Ticket already validated");
+        case TICKET_DOES_NOT_EXIST -> new AlertBox("Error",
+            "Ticket does not exist");
+        case TICKET_ALREADY_REFUNDED -> new AlertBox("Error",
+            "Ticket already refunded");
+      };
       alertBox.show();
+      ticketIdTextField.clear();
     });
   }
 
@@ -87,5 +108,6 @@ public class TicketValidationPane extends BorderPane {
    */
   private void update() {
     this.setVisible(manager.getState() == State.TICKET_VALIDATION);
+    ticketIdTextField.clear();
   }
 }

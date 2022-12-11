@@ -36,4 +36,9 @@ public class Meal {
   public String getDateAsString() {
     return date.format(Logger.dateFormatter);
   }
+
+  @Override
+  public String toString() {
+    return String.format("%s - %s", getDateAsString(), period);
+  }
 }
