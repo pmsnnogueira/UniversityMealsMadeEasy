@@ -66,6 +66,6 @@ public class Ticket extends Transaction {
 
   @Override
   public String toString() {
-    return String.format("Bought ticket: on %s", getDateTimeOfPurchaseAsString());
+    return String.format("Ticket %d. Bought on %s", id, getDateTimeOfPurchaseAsString());
   }
 }

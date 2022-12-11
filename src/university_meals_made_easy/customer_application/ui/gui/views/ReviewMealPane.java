@@ -7,8 +7,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import university_meals_made_easy.back_office.ui.gui.AlertBox;
 import university_meals_made_easy.customer_application.model.ModelManager;
+import university_meals_made_easy.customer_application.model.data.result.ReviewResult;
 import university_meals_made_easy.customer_application.model.fsm.State;
+import university_meals_made_easy.database.tables.FoodItem;
+import university_meals_made_easy.database.tables.transaction.Ticket;
+
+import java.util.List;
 
 
 /**
@@ -17,7 +23,8 @@ import university_meals_made_easy.customer_application.model.fsm.State;
  */
 public class ReviewMealPane extends BorderPane {
   private final ModelManager manager;
-  private ListView<String> ticketListView, mealItemsListView;
+  private ListView<Ticket> ticketListView;
+  private ListView<FoodItem> foodItemsListView;
   private Button btnSubmitReview;
   private Label rateThisMealLabel;
   private TextArea observationsTextArea;
@@ -28,6 +35,7 @@ public class ReviewMealPane extends BorderPane {
    * Create views and all the aesthetic,
    * Controls the user actions,
    * Update the Root panel visibility
+   *
    * @param manager
    */
   public ReviewMealPane(ModelManager manager) {
@@ -40,12 +48,12 @@ public class ReviewMealPane extends BorderPane {
 
   /**
    * The createViews method is capable of create all the content for the Review meal view like
-   *   Groups,
-   *   Vbox,
-   *   Lists,
-   *   Buttons,
-   *   Labels,
-   *   And all the aesthetic,
+   * Groups,
+   * Vbox,
+   * Lists,
+   * Buttons,
+   * Labels,
+   * And all the aesthetic,
    */
   private void createViews() {
     Label title = new Label("Review Meal");
@@ -56,9 +64,9 @@ public class ReviewMealPane extends BorderPane {
     ticketListView = new ListView<>();
     ticketListView.setPrefHeight(700);
     ticketListView.setPrefWidth(600);
-    mealItemsListView = new ListView<>();
-    mealItemsListView.setPrefHeight(700);
-    mealItemsListView.setPrefWidth(600);
+    foodItemsListView = new ListView<>();
+    foodItemsListView.setPrefHeight(700);
+    foodItemsListView.setPrefWidth(600);
     rateThisMealLabel = new Label("Rate this meal");
     rateSlider = new Slider();
     rateSlider.setMin(0);
@@ -79,7 +87,7 @@ public class ReviewMealPane extends BorderPane {
     VBox leftVBox = new VBox(leftLabel, ticketListView);
     leftVBox.setAlignment(Pos.CENTER);
     Label centerLabel = new Label("Meal details");
-    VBox centerVBox = new VBox(centerLabel, mealItemsListView);
+    VBox centerVBox = new VBox(centerLabel, foodItemsListView);
     centerVBox.setAlignment(Pos.CENTER);
     HBox centerHBox = new HBox(leftVBox, centerVBox, rightVBox);
     centerHBox.setAlignment(Pos.CENTER);
@@ -95,6 +103,35 @@ public class ReviewMealPane extends BorderPane {
    */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
+    ticketListView.getSelectionModel().selectedItemProperty().
+        addListener((a, b, c) -> {
+          Ticket selectedTicket = ticketListView.getSelectionModel().getSelectedItem();
+          foodItemsListView.getItems().clear();
+          if (selectedTicket == null)
+            return;
+          List<FoodItem> foodItems = manager.getTicketItems(selectedTicket);
+          if (foodItems == null)
+            return;
+          foodItemsListView.getItems().addAll(foodItems);
+        });
+
+    btnSubmitReview.setOnAction(actionEvent -> {
+      Ticket selectedTicket = ticketListView.getSelectionModel().getSelectedItem();
+      if (selectedTicket == null)
+        return;
+      int rate = (int) rateSlider.getValue();
+      String observations = observationsTextArea.getText();
+      if (observations == null)
+        observations = "No observations";
+      ReviewResult result = manager.review(selectedTicket, rate, observations);
+      AlertBox alertBox = switch (result) {
+        case SUCCESS -> new AlertBox("Success",
+            "Ticket reviewed with success");
+        case UNEXPECTED_ERROR -> new AlertBox("Error", "Unexpected error");
+      };
+      alertBox.show();
+    });
+
   }
 
 
@@ -104,9 +141,11 @@ public class ReviewMealPane extends BorderPane {
    */
   private void update() {
     this.setVisible(manager.getState() == State.REVIEWAL);
-    mealItemsListView.getItems().clear();
+    foodItemsListView.getItems().clear();
     ticketListView.getItems().clear();
-    ticketListView.getItems().add("Empty List");
-    mealItemsListView.getItems().add("Select meal on left first");
+    List<Ticket> tickets = manager.getTickets();
+    if (tickets == null)
+      return;
+    ticketListView.getItems().addAll(tickets);
   }
 }

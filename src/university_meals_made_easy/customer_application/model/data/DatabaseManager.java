@@ -215,7 +215,7 @@ public class DatabaseManager {
       resultSet = statement.executeQuery(String.format("""
           SELECT *
           FROM meal
-          WHERE date = '%s'
+          WHERE date_of_meal = '%s'
           AND meal_period = '%s'
           """, date.format(Logger.dateFormatter), period));
       if (resultSet.next())
@@ -224,6 +224,7 @@ public class DatabaseManager {
             MealPeriod.from(resultSet.getString("meal_period")),
             resultSet.getString("date_of_meal"));
     } catch (SQLException e) {
+      e.printStackTrace();
       return null;
     }
     return null;
@@ -431,15 +432,10 @@ public class DatabaseManager {
       if (!resultSet.next()
           && resultSet.getInt("N") >= slot.getCapacity())
         return BuyResult.SLOT_ALREADY_FULL;
-      statement.execute(String.format("""
-          UPDATE app_user
-          SET balance = %f
-          WHERE id = %d;
-          """, balance - cost, userId));
       ticketId = getLastId(Table.TICKET) + 1;
       statement.execute(String.format("""
           INSERT INTO ticket
-          VALUES (%d, %d, %d, %s, NULL);
+          VALUES (%d, %d, %d, '%s', NULL);
           """, ticketId, userId, slot.getId(),
           LocalDateTime.now().format(Logger.dateTimeFormatter)));
       for (FoodItem foodItem : foodItems)
@@ -447,6 +443,11 @@ public class DatabaseManager {
             INSERT INTO ticket_food_item
             VALUES (%d, %d);
             """, ticketId, foodItem.getId()));
+      statement.execute(String.format("""
+          UPDATE app_user
+          SET balance = %f
+          WHERE id = %d;
+          """, balance - cost, userId));
       return BuyResult.SUCCESS;
     } catch (SQLException e) {
       return BuyResult.UNEXPECTED_ERROR;
@@ -460,12 +461,17 @@ public class DatabaseManager {
       throw new NullPointerException("ticket cannot be null");
     try (Statement statement = connection.createStatement()) {
       statement.execute(String.format("""
+          DELETE FROM ticket
+          WHERE id = %d
+          """, ticket.getId()));
+      statement.execute(String.format("""
           INSERT INTO refund
-          VALUES (NULL, %d, %d, %s);
+          VALUES (NULL, %d, %d, '%s');
           """, userId, ticket.getId(),
           LocalDateTime.now().format(Logger.dateTimeFormatter)));
       return RefundResult.SUCCESS;
     } catch (SQLException e) {
+      e.printStackTrace();
       return RefundResult.UNEXPECTED_ERROR;
     }
   }
@@ -483,12 +489,13 @@ public class DatabaseManager {
     try (Statement statement = connection.createStatement()) {
       statement.execute(String.format("""
           INSERT INTO review
-          VALUES (NULL, %d, %d, %s, %d, %s);
+          VALUES (NULL, %d, %d, '%s', %d, '%s');
           """, userId, ticket.getId(),
           LocalDateTime.now().format(Logger.dateTimeFormatter),
           rating, comment));
       return ReviewResult.SUCCESS;
     } catch (SQLException e) {
+      e.printStackTrace();
       return ReviewResult.UNEXPECTED_ERROR;
     }
   }

@@ -9,8 +9,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import university_meals_made_easy.back_office.ui.gui.AlertBox;
 import university_meals_made_easy.customer_application.model.ModelManager;
+import university_meals_made_easy.customer_application.model.data.result.RefundResult;
 import university_meals_made_easy.customer_application.model.fsm.State;
+import university_meals_made_easy.database.tables.FoodItem;
+import university_meals_made_easy.database.tables.transaction.Ticket;
+
+import java.util.List;
 
 /**
  * This class is capable of show the users tickets
@@ -19,7 +25,8 @@ import university_meals_made_easy.customer_application.model.fsm.State;
 public class MyTicketsPane extends BorderPane {
   private final ModelManager manager;
 
-  private ListView<String> ticketListView, mealItemsListView;
+  private ListView<Ticket> ticketListView;
+  private ListView<FoodItem> foodItemsListView;
   private Button btnRefund;
   private Label mealPriceLabel;
 
@@ -50,9 +57,9 @@ public class MyTicketsPane extends BorderPane {
     ticketListView = new ListView<>();
     ticketListView.setPrefHeight(700);
     ticketListView.setPrefWidth(600);
-    mealItemsListView = new ListView<>();
-    mealItemsListView.setPrefHeight(700);
-    mealItemsListView.setPrefWidth(600);
+    foodItemsListView = new ListView<>();
+    foodItemsListView.setPrefHeight(700);
+    foodItemsListView.setPrefWidth(600);
     mealPriceLabel = new Label("Meal Price: ");
     btnRefund = new Button("Refund");
     btnRefund.setPrefWidth(300);
@@ -65,7 +72,7 @@ public class MyTicketsPane extends BorderPane {
     VBox leftVBox = new VBox(leftLabel, ticketListView);
     leftVBox.setAlignment(Pos.CENTER);
     Label centerLabel = new Label("Meal details");
-    VBox centerVBox = new VBox(centerLabel, mealItemsListView);
+    VBox centerVBox = new VBox(centerLabel, foodItemsListView);
     centerVBox.setAlignment(Pos.CENTER);
     HBox centerHBox = new HBox(leftVBox, centerVBox, rightVBox);
     centerHBox.setAlignment(Pos.CENTER);
@@ -83,6 +90,35 @@ public class MyTicketsPane extends BorderPane {
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
 
+    ticketListView.getSelectionModel().selectedItemProperty().
+        addListener((a,b,c)-> {
+          Ticket selectedTicket = ticketListView.getSelectionModel().getSelectedItem();
+          foodItemsListView.getItems().clear();
+          if(selectedTicket == null)
+            return;
+          List<FoodItem> foodItems = manager.getTicketItems(selectedTicket);
+          if(foodItems == null)
+            return;
+          foodItemsListView.getItems().addAll(foodItems);
+          float totalPrice = 0;
+          for(FoodItem foodItem : foodItems) {
+            totalPrice += foodItem.getPrice();
+          }
+          mealPriceLabel.setText(String.format("Total price: %.2f €", totalPrice));
+    });
+
+    btnRefund.setOnAction(actionEvent -> {
+      Ticket selectedTicket = ticketListView.getSelectionModel().getSelectedItem();
+      if(selectedTicket == null)
+        return;
+      RefundResult result = manager.refund(selectedTicket);
+      AlertBox alertBox = switch (result) {
+        case SUCCESS -> new AlertBox("Success", "Ticket refunded");
+        case UNEXPECTED_ERROR -> new AlertBox("Error",
+            "Unexpected error");
+      };
+      alertBox.show();
+    });
   }
 
   /**
@@ -91,7 +127,12 @@ public class MyTicketsPane extends BorderPane {
    */
   private void update() {
     this.setVisible(manager.getState() == State.TICKETS_CONSULTATION);
-    mealItemsListView.getItems().clear();
+    mealPriceLabel.setText("Total price: 0");
+    foodItemsListView.getItems().clear();
     ticketListView.getItems().clear();
+    List<Ticket> tickets = manager.getTickets();
+    if(tickets == null)
+      return;
+    ticketListView.getItems().addAll(tickets);
   }
 }

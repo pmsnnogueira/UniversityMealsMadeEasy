@@ -133,6 +133,8 @@ public class OrderedMealsPane extends BorderPane {
       default -> MealPeriod.DINNER;
     };
     Meal selectedMeal = manager.getMeal(date, period);
+    if(selectedMeal == null)
+      return;
     List<TimeSlot> timeSlots = manager.getTimeSlots(selectedMeal);
     if(timeSlots == null)
       return;

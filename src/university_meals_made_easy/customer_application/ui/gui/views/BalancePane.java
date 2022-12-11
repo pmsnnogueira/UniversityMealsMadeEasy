@@ -1,6 +1,5 @@
 package university_meals_made_easy.customer_application.ui.gui.views;
 
-import com.sun.webkit.Timer;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -114,7 +113,7 @@ public class BalancePane extends BorderPane {
    */
   private void update() {
     usernameLabel.setText(manager.getUsername());
-    balanceLabel.setText(manager.getBalance() + " €");
+    balanceLabel.setText(String.format("%.2f €", manager.getBalance()));
   }
 
 }

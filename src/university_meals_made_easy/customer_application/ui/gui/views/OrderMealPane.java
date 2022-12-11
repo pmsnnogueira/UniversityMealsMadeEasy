@@ -8,9 +8,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.ui.gui.AlertBox;
 import university_meals_made_easy.customer_application.model.ModelManager;
+import university_meals_made_easy.customer_application.model.data.result.BuyResult;
 import university_meals_made_easy.customer_application.model.fsm.State;
+import university_meals_made_easy.database.tables.FoodItem;
+import university_meals_made_easy.database.tables.Meal.Meal;
+import university_meals_made_easy.database.tables.Meal.MealPeriod;
+import university_meals_made_easy.database.tables.TimeSlot;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *Order Meal Pane ->
@@ -24,6 +31,13 @@ public class OrderMealPane extends BorderPane {
   private ChoiceBox<String> periodChoiceBox;
   private Label totalPriceLabel;
   private Button btnBuy;
+  private VBox leftVBox;
+  private VBox centerVBox;
+  private Meal selectedMeal;
+  private ToggleGroup toggleGroup;
+  private List<FoodItem> selectedFoodItems;
+  private TimeSlot selectedTimeSlot;
+
 
 
   /**
@@ -34,6 +48,7 @@ public class OrderMealPane extends BorderPane {
    */
   public OrderMealPane(ModelManager manager) {
     this.manager = manager;
+    selectedFoodItems = new ArrayList<>();
     createViews();   //Initialize View
     registerHandlers(); //Control View
     update();        //Update visibility
@@ -61,33 +76,22 @@ public class OrderMealPane extends BorderPane {
     topVBox.setAlignment(Pos.CENTER);
     this.setTop(topVBox);
 
-    String[] st = { "Arroz Branco - 0.5€", "Feijão Preto - 0.7€",
-        "Entremeada - 0.8€" };
-
     // Create and show every meal items for that specific day and meal period
-    VBox leftVBox = new VBox(new Label("Choose your meal Items"));
-    for (String s : st) {
-      CheckBox c = new CheckBox(s);
-      leftVBox.getChildren().add(c);
-      c.setIndeterminate(true);
-    }
+    leftVBox = new VBox(new Label("Choose your meal Items"));
     leftVBox.setAlignment(Pos.CENTER);
 
     //Create and show available time slots for that specific meal period
-    ToggleGroup toggleGroup = new ToggleGroup();
-    RadioButton r1 = new RadioButton("12:00 - 12:15");
-    r1.setToggleGroup(toggleGroup);
-    RadioButton r2 = new RadioButton("12:15 - 12:30");
-    r2.setToggleGroup(toggleGroup);
-    RadioButton r3 = new RadioButton("12:30 - 12:45");
-    r3.setToggleGroup(toggleGroup);
+    toggleGroup = new ToggleGroup();
 
-    VBox centerVBox = new VBox(new Label("Pick a timeslot"), r1, r2, r3); //Pick time Slot label
+    centerVBox = new VBox(new Label("Pick a timeslot")); //Pick time Slot label
     centerVBox.setAlignment(Pos.CENTER); //Center the timeSlot label in Vbox
 
     //Create and show VBox with total Price for the specific choosed meal
     totalPriceLabel = new Label("Total Price: "); //Create totalPriceLabel
+    totalPriceLabel.setFont(Font.font(15));
     btnBuy = new Button("Buy"); //Create the buy Button
+    btnBuy.setPrefWidth(150);
+    btnBuy.setPrefHeight(100);
     VBox rightVBox = new VBox(totalPriceLabel, btnBuy); //Insert into Vbox the total price label with a buy button
     rightVBox.setAlignment(Pos.CENTER); //Align items to the center of the rightVBox
 
@@ -106,19 +110,102 @@ public class OrderMealPane extends BorderPane {
    */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
+
+    datePicker.setOnAction( actionEvent -> update());
+
+    periodChoiceBox.setOnAction(actionEvent -> update());
+
     btnBuy.setOnAction(actionEvent -> {
-      AlertBox alertBox = new AlertBox("Success" , "You can found your tickets " +
-          "under 'My Tickets'");
+      if(selectedTimeSlot == null || selectedFoodItems.isEmpty()) {
+        AlertBox alertBox = new AlertBox("Warning",
+            "Please select an available time slot or pick at least " +
+                "one meal");
+        alertBox.show();
+        return;
+      }
+      BuyResult result = manager.buy(selectedTimeSlot, selectedFoodItems);
+      AlertBox alertBox = switch (result) {
+        case SUCCESS -> new AlertBox("Success",
+            "Ticket bought with success");
+        case UNEXPECTED_ERROR -> new AlertBox("Error",
+            "Unexpected Error");
+        case SLOT_ALREADY_FULL -> new AlertBox("Error",
+            "Time slot is already full");
+        case INSUFFICIENT_BALANCE -> new AlertBox("Error",
+            "Insufficient balance");
+      };
       alertBox.show();
-
     });
+  }
 
+  private void getSelectedMeal() {
+    MealPeriod period = switch(periodChoiceBox.getValue()) {
+      case "Lunch" -> MealPeriod.LUNCH;
+      default -> MealPeriod.DINNER;
+    };
+    LocalDate date = datePicker.getValue();
+    if( date == null)
+      return;
+    selectedMeal = manager.getMeal(date, period);
   }
 
   /**
-    *Function capble of change the Visibility of OrderMealPane
+    *Function capable of change the Visibility of OrderMealPane
     */
   private void update() {
+    getSelectedMeal();
+    centerVBox.getChildren().clear();
+    leftVBox.getChildren().clear();
+    selectedFoodItems.clear();
+    updateTotalPrice();
     this.setVisible(manager.getState() == State.MEAL_ORDERING);
+    leftVBox.getChildren().add(new Label("No food items available"));
+    centerVBox.getChildren().add(new Label("No time slot available"));
+    if(selectedMeal == null)
+      return;
+    centerVBox.getChildren().clear();
+    leftVBox.getChildren().clear();
+    List<FoodItem> foodItems = manager.getFoodItems(selectedMeal);
+    if(foodItems == null)
+      return;
+    for (FoodItem foodItem : foodItems) {
+      CheckBox c = new CheckBox(foodItem.toString());
+      leftVBox.getChildren().add(c);
+      c.setIndeterminate(true);
+      c.setUserData(foodItem);
+      c.setFont(Font.font(15));
+      c.setOnAction(actionEvent -> {
+        if(c.isSelected()) {
+          selectedFoodItems.add((FoodItem) c.getUserData());
+        } else {
+          selectedFoodItems.remove((FoodItem) c.getUserData());
+        }
+        updateTotalPrice();
+      });
+    }
+    List<TimeSlot> timeSlots = manager.getAvailableTimeSlots(selectedMeal);
+    if(timeSlots == null)
+      return;
+    for(TimeSlot timeSlot : timeSlots) {
+      RadioButton radioButton = new RadioButton(timeSlot.getTimeOfStartAsString() +
+          " : " +timeSlot.getTimeOfEndAsString());
+      radioButton.setToggleGroup(toggleGroup);
+      radioButton.setUserData(timeSlot);
+      radioButton.setFont(Font.font(15));
+      centerVBox.getChildren().add(radioButton);
+      radioButton.setOnAction(actionEvent -> {
+        if(radioButton.isSelected()) {
+          selectedTimeSlot = (TimeSlot) radioButton.getUserData();
+        }
+      });
+    }
+  }
+
+  private void updateTotalPrice() {
+    float totalPrice = 0;
+    for(FoodItem foodItem :selectedFoodItems) {
+      totalPrice += foodItem.getPrice();
+    }
+    totalPriceLabel.setText(String.format("Total Price: %.2f €", totalPrice));
   }
 }

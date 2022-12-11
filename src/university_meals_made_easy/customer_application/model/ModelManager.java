@@ -1,7 +1,6 @@
 package university_meals_made_easy.customer_application.model;
 
 import university_meals_made_easy.customer_application.model.data.DataManager;
-import university_meals_made_easy.customer_application.model.data.DatabaseManager;
 import university_meals_made_easy.customer_application.model.data.result.*;
 import university_meals_made_easy.customer_application.model.fsm.State;
 import university_meals_made_easy.customer_application.model.fsm.state.Context;
@@ -14,7 +13,6 @@ import university_meals_made_easy.database.tables.transaction.Transaction;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -160,10 +158,14 @@ public class ModelManager {
     return dataManager.getTransactionHistory();
   }
   public BuyResult buy(TimeSlot slot, List<FoodItem> foodItems) {
-    return context.buy(slot, foodItems);
+    BuyResult result = context.buy(slot, foodItems);
+    pcs.firePropertyChange(PROP_STATE, null, null);
+    return result;
   }
   public RefundResult refund(Ticket ticket) {
-    return context.refund(ticket);
+    RefundResult result = context.refund(ticket);
+    pcs.firePropertyChange(PROP_STATE, null, null);
+    return result;
   }
   public ReviewResult review(Ticket ticket, int rating,
                              String comment) {
