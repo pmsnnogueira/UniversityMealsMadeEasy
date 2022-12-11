@@ -1,4 +1,4 @@
-package test.java.university_meal_made_easy;
+package test.university_meal_made_easy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

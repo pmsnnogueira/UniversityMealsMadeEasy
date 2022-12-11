@@ -5,6 +5,7 @@ import university_meals_made_easy.back_office.model.data.result.*;
 import university_meals_made_easy.database.tables.FoodItem;
 import university_meals_made_easy.database.tables.Meal.Meal;
 import university_meals_made_easy.database.tables.Meal.MealPeriod;
+import university_meals_made_easy.database.tables.Table;
 import university_meals_made_easy.database.tables.TimeSlot;
 import university_meals_made_easy.database.tables.transaction.Review;
 import university_meals_made_easy.database.tables.transaction.Ticket;
@@ -402,9 +403,33 @@ public class DatabaseManager {
       return TicketValidationResult.UNEXPECTED_ERROR;
     }
   }
+  private int getLastId(Table table) throws SQLException {
+    ResultSet resultSet;
+
+    if (table == null)
+      throw new NullPointerException("table cannot be null");
+    try (Statement statement = connection.createStatement()) {
+      resultSet = statement.executeQuery(String.format("""
+          SELECT MAX(ID) AS "N"
+          FROM '%s';
+          """, table));
+      if (!resultSet.next())
+        return -1;
+      return resultSet.getInt("N");
+    }
+  }
   public MealInsertionResult insertMeal(MealPeriod mealPeriod,
                                         LocalDate date)
       throws NullPointerException {
+    String[] lunchTimeSlotTimes =
+        {"12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30",
+            "13:45", "14:00", "14:15", "14:30", "14:45", "15:00"};
+    String[] dinnerTimeSlotTimes =
+        {"19:30", "19:45", "20:00", "20:15", "20:30", "20:45", "21:00",
+            "21:15", "21:30", "21:45", "22:00", "22:15", "22:30"};
+    String[] mealTimeSlotsTimes;
+    int mealId;
+
     if (mealPeriod == null)
       throw new NullPointerException("meal period cannot be null");
     if (date == null)
@@ -417,10 +442,21 @@ public class DatabaseManager {
           AND date_of_meal = '%s';
           """, mealPeriod, date.format(Logger.dateFormatter))).next())
         return MealInsertionResult.ALREADY_EXISTS;
+      mealId = getLastId(Table.MEAL) + 1;
       statement.execute(String.format("""
           INSERT INTO meal
-          VALUES (NULL, '%s', '%s');
-          """, mealPeriod, date.format(Logger.dateFormatter)));
+          VALUES (%d, '%s', '%s');
+          """, mealId, mealPeriod,
+          date.format(Logger.dateFormatter)));
+      if (mealPeriod == MealPeriod.LUNCH)
+        mealTimeSlotsTimes = lunchTimeSlotTimes;
+      else
+        mealTimeSlotsTimes = dinnerTimeSlotTimes;
+      for (int i = 0; i < mealTimeSlotsTimes.length - 1; i++)
+        statement.execute(String.format("""
+        INSERT INTO time_slot
+        VALUES (NULL, %d, '%s', '%s', NULL);
+        """, mealId, mealTimeSlotsTimes[i], mealTimeSlotsTimes[i + 1]));
       return MealInsertionResult.SUCCESS;
     } catch (SQLException e) {
       e.printStackTrace();
