@@ -2,11 +2,13 @@ package university_meals_made_easy.back_office.ui.gui.views;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.model.ModelManager;
 import university_meals_made_easy.back_office.model.fsm.State;
+import university_meals_made_easy.resources.ImageManager;
 
 /**
  * This view is a border pane that contains simple information about the app
@@ -38,6 +40,8 @@ public class MainMenuPane extends BorderPane {
     VBox topVBox = new VBox(title);
     topVBox.setAlignment(Pos.CENTER);
     this.setTop(topVBox);
+    ImageView imageView = new ImageView(ImageManager.getImage("cantina.jpg"));
+    this.setCenter(imageView);
   }
 
   /**
