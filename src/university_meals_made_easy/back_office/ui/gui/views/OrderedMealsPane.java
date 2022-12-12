@@ -1,10 +1,10 @@
 package university_meals_made_easy.back_office.ui.gui.views;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import university_meals_made_easy.back_office.model.ModelManager;
 import university_meals_made_easy.back_office.model.fsm.State;
@@ -110,12 +110,17 @@ public class OrderedMealsPane extends BorderPane {
               Label name = new Label(foodItem.getDescription());
               Label price = new Label(foodItem.getPrice()+ "");
               HBox foodItemHBox = new HBox(name, price);
+              foodItemHBox.setPrefWidth(400);
+              foodItemHBox.setPrefHeight(100);
+              foodItemHBox.setBackground(new Background(new BackgroundFill(
+                  Color.LIGHTYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
               foodItemHBox.setAlignment(Pos.CENTER);
               foodItemHBox.setSpacing(5);
               container.getChildren().add(foodItemHBox);
             }
             foodItemsContainer.getChildren().add(container);
           }
+          scrollPane.setContent(foodItemsContainer);
         });
   }
 
@@ -124,6 +129,7 @@ public class OrderedMealsPane extends BorderPane {
    * timeslots on the view
    */
   private void listTimeSlots() {
+    scrollPane.setContent(null);
     timeslotListView.getItems().clear();
     LocalDate date = datePicker.getValue();
     if(date == null)
@@ -145,6 +151,7 @@ public class OrderedMealsPane extends BorderPane {
    * needs after a change
    */
   private void update() {
+    scrollPane.setContent(null);
     this.setVisible(manager.getState() == State.ORDERED_MEALS_CONSULTATION);
     listTimeSlots();
   }

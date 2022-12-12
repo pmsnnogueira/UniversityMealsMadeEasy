@@ -89,6 +89,7 @@ public class MealReviewsPane extends BorderPane {
 
 
   private void listReviews(Meal selectedMeal) {
+    scrollPane.setContent(null);
     if(selectedMeal == null)
       return;
     List<Review> reviews = manager.getReviews(selectedMeal);
@@ -101,6 +102,7 @@ public class MealReviewsPane extends BorderPane {
     for(Review review : reviews) {
       Label rating = new Label(review.getRating() + "");
       TextArea comment = new TextArea(review.getComment());
+      comment.setDisable(true);
       Label date = new Label(review.getDateTimeAsString());
       VBox container = new VBox(rating, comment, date);
       container.setAlignment(Pos.CENTER);
@@ -118,6 +120,7 @@ public class MealReviewsPane extends BorderPane {
    * needs after a change
    */
   private void update() {
+    scrollPane.setContent(null);
     previousMealsListView.getItems().clear();
     this.setVisible(manager.getState() == State.REVIEWS_CONSULTATION);
     List<Meal> previousMeals = manager.getPreviousMeals();

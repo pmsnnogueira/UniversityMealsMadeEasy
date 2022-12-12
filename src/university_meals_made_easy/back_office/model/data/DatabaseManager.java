@@ -325,7 +325,7 @@ public class DatabaseManager {
       throw new NullPointerException("meal cannot be null");
     try (Statement statement = connection.createStatement()) {
       resultSet = statement.executeQuery(String.format("""
-          SELECT review.id, app_user_id, ticket_id, datetime_of_review,
+          SELECT review.id, review.app_user_id, ticket_id, datetime_of_review,
                  rating, comment
           FROM review, ticket, time_slot
           WHERE ticket_id = ticket.id
@@ -338,7 +338,7 @@ public class DatabaseManager {
             resultSet.getInt("id"),
             resultSet.getInt("app_user_id"),
             resultSet.getInt("ticket_id"),
-            resultSet.getString("datetime"),
+            resultSet.getString("datetime_of_review"),
             resultSet.getInt("rating"),
             resultSet.getString("comment")
         ));
@@ -460,7 +460,6 @@ public class DatabaseManager {
       }
       return MealInsertionResult.SUCCESS;
     } catch (SQLException e) {
-      e.printStackTrace();
       return null;
     }
   }

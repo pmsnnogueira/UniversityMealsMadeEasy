@@ -199,7 +199,6 @@ public class DatabaseManager {
           value));
       return BalanceTopOffResult.SUCCESS;
     } catch (SQLException e) {
-      e.printStackTrace();
       return BalanceTopOffResult.UNEXPECTED_ERROR;
     }
   }
@@ -224,7 +223,6 @@ public class DatabaseManager {
             MealPeriod.from(resultSet.getString("meal_period")),
             resultSet.getString("date_of_meal"));
     } catch (SQLException e) {
-      e.printStackTrace();
       return null;
     }
     return null;
@@ -471,7 +469,6 @@ public class DatabaseManager {
           LocalDateTime.now().format(Logger.dateTimeFormatter)));
       return RefundResult.SUCCESS;
     } catch (SQLException e) {
-      e.printStackTrace();
       return RefundResult.UNEXPECTED_ERROR;
     }
   }
@@ -495,7 +492,6 @@ public class DatabaseManager {
           rating, comment));
       return ReviewResult.SUCCESS;
     } catch (SQLException e) {
-      e.printStackTrace();
       return ReviewResult.UNEXPECTED_ERROR;
     }
   }

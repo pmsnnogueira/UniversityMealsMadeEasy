@@ -10,15 +10,24 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import university_meals_made_easy.Logger;
 import university_meals_made_easy.customer_application.model.ModelManager;
 import university_meals_made_easy.customer_application.model.fsm.State;
+import university_meals_made_easy.database.tables.FoodItem;
+import university_meals_made_easy.database.tables.Meal.Meal;
+import university_meals_made_easy.database.tables.Meal.MealPeriod;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public class MenusPane extends BorderPane {
   private final ModelManager manager;
-  ChoiceBox<String> periodChoiceBox;
-  Button btnPrevious, btnNext;
-  ListView<String> mealElementsListView;
-  Label lbDatetime;
+  private ChoiceBox<String> periodChoiceBox;
+  private Button btnPrevious, btnNext;
+  private ListView<FoodItem> mealElementsListView;
+  private Label lbDatetime;
+  private LocalDate localDate;
+
 
   /**
    * Constructor for class MenusPane that receives and save the modelManager,
@@ -49,7 +58,8 @@ public class MenusPane extends BorderPane {
     VBox topVBox = new VBox(title);
     topVBox.setAlignment(Pos.CENTER);
     this.setTop(topVBox);
-    lbDatetime = new Label("Current day (28/11/2022)");
+    localDate = LocalDate.now();
+    lbDatetime = new Label();
     Label selectPeriodLabel = new Label("Period: ");
     periodChoiceBox = new ChoiceBox<>();
     periodChoiceBox.getItems().addAll("Lunch", "Dinner");
@@ -75,6 +85,16 @@ public class MenusPane extends BorderPane {
    */
   private void registerHandlers() {
     manager.addPropertyChangeListener(ModelManager.PROP_STATE, evt -> update());
+    btnNext.setOnAction(actionEvent -> {
+      localDate = localDate.plusDays(1);
+      update();
+    });
+    btnPrevious.setOnAction(actionEvent -> {
+      localDate = localDate.minusDays(1);
+      update();
+    });
+
+    periodChoiceBox.setOnAction(actionEvent -> update());
 
   }
 
@@ -85,6 +105,22 @@ public class MenusPane extends BorderPane {
   private void update() {
     this.setVisible(manager.getState() == State.MENU_CONSULTATION);
     mealElementsListView.getItems().clear();
-    mealElementsListView.getItems().add("List is empty");
+    lbDatetime.setText(localDate.getDayOfWeek() + " " + localDate.format(Logger.dateFormatter));
+    btnPrevious.setDisable(localDate.isEqual(LocalDate.now()));
+    MealPeriod selectedMealPeriod = switch(periodChoiceBox.getValue()) {
+      case "Lunch" -> MealPeriod.LUNCH;
+      default -> MealPeriod.DINNER;
+    };
+    if(selectedMealPeriod == null)
+      return;
+    if(localDate == null)
+      return;
+    Meal selectedMeal = manager.getMeal(localDate, selectedMealPeriod);
+    if(selectedMeal == null)
+      return;
+    List<FoodItem> foodItems = manager.getFoodItems(selectedMeal);
+    if(foodItems == null)
+      return;
+    mealElementsListView.getItems().addAll(foodItems);
   }
 }

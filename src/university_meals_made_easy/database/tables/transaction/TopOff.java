@@ -45,6 +45,6 @@ public class TopOff extends Transaction {
 
   @Override
   public String toString() {
-    return String.format("Top off balance: %f on %s", value, getDateTimeAsString());
+    return String.format("Top off balance: %.2f € on %s", value, getDateTimeAsString());
   }
 }
