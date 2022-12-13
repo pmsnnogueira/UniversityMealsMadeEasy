@@ -103,6 +103,14 @@ public class DataManager {
       return null;
     }
   }
+  public List<Ticket> getValidatedTickets() {
+    try {
+      return DatabaseManager.getInstance().getValidatedTickets(userId);
+    } catch (SQLException e) {
+      return null;
+    }
+  }
+
   public List<FoodItem> getTicketItems(Ticket ticket) {
     try {
       return DatabaseManager.getInstance().getTicketItems(ticket);

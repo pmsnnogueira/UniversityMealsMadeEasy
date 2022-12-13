@@ -151,6 +151,9 @@ public class ModelManager {
   public List<Ticket> getTickets() {
     return dataManager.getTickets();
   }
+  public List<Ticket> getValidatedTickets() {
+    return dataManager.getValidatedTickets();
+  }
   public List<FoodItem> getTicketItems(Ticket ticket) {
     return dataManager.getTicketItems(ticket);
   }

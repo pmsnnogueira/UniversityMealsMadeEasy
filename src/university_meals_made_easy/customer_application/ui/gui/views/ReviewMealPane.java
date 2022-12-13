@@ -143,7 +143,7 @@ public class ReviewMealPane extends BorderPane {
     this.setVisible(manager.getState() == State.REVIEWAL);
     foodItemsListView.getItems().clear();
     ticketListView.getItems().clear();
-    List<Ticket> tickets = manager.getTickets();
+    List<Ticket> tickets = manager.getValidatedTickets();
     if (tickets == null)
       return;
     ticketListView.getItems().addAll(tickets);

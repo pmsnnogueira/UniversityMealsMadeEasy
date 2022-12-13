@@ -384,15 +384,9 @@ public class DatabaseManager {
           SELECT *
           FROM ticket
           WHERE id = %d
-          AND datetime_of_validation = NULL;
+          AND datetime_of_validation IS NULL;
           """, id)).next())
         return TicketValidationResult.TICKET_ALREADY_VALIDATED;
-      if (statement.executeQuery(String.format("""
-          SELECT *
-          FROM refund
-          WHERE ticket_id = %d;
-          """, id)).next())
-        return TicketValidationResult.TICKET_ALREADY_REFUNDED;
       statement.execute(String.format("""
           UPDATE ticket
           SET datetime_of_validation = '%s'

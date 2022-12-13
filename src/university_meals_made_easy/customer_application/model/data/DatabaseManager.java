@@ -294,7 +294,37 @@ public class DatabaseManager {
           datetime_of_validation
           FROM ticket, app_user
           WHERE app_user_id = app_user.id
-          AND app_user.id = %d;
+          AND app_user.id = %d
+          AND ticket.datetime_of_validation is null;
+          """, userId));
+      tickets = new ArrayList<>();
+      while (resultSet.next())
+        tickets.add(new Ticket(
+            resultSet.getInt("id"),
+            resultSet.getInt("app_user_id"),
+            resultSet.getInt("time_slot_id"),
+            resultSet.getString("datetime_of_purchase"),
+            resultSet.getString("datetime_of_validation")
+        ));
+      return tickets;
+    } catch (SQLException e) {
+      return null;
+    }
+  }
+  public List<Ticket> getValidatedTickets(int userId) throws NullPointerException {
+    ResultSet resultSet;
+    List<Ticket> tickets;
+
+    if (userId == -1)
+      throw new IllegalArgumentException("user must be authenticated");
+    try (Statement statement = connection.createStatement()) {
+      resultSet = statement.executeQuery(String.format("""
+          SELECT ticket.id, app_user_id, time_slot_id, datetime_of_purchase,
+          datetime_of_validation
+          FROM ticket, app_user
+          WHERE app_user_id = app_user.id
+          AND app_user.id = %d
+          AND ticket.datetime_of_validation is not null;
           """, userId));
       tickets = new ArrayList<>();
       while (resultSet.next())
@@ -467,6 +497,18 @@ public class DatabaseManager {
           VALUES (NULL, %d, %d, '%s');
           """, userId, ticket.getId(),
           LocalDateTime.now().format(Logger.dateTimeFormatter)));
+      List<FoodItem> foodItems = getTicketItems(ticket);
+      if(foodItems == null)
+        return RefundResult.UNEXPECTED_ERROR;
+      float price = 0;
+      for(FoodItem foodItem : foodItems) {
+        price += foodItem.getPrice();
+      }
+      statement.execute(String.format("""
+          UPDATE app_user
+          SET balance = balance + %f
+          WHERE id = %d
+          """, price, userId));
       return RefundResult.SUCCESS;
     } catch (SQLException e) {
       return RefundResult.UNEXPECTED_ERROR;
