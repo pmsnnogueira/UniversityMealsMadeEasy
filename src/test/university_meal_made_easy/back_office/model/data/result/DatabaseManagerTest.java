@@ -3,6 +3,7 @@ package test.university_meal_made_easy.back_office.model.data.result;
 
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
+import university_meals_made_easy.Logger;
 import university_meals_made_easy.back_office.model.data.DatabaseManager;
 import university_meals_made_easy.back_office.model.data.result.MealFoodItemInsertionResult;
 import university_meals_made_easy.database.tables.Meal.Meal;
@@ -55,13 +56,13 @@ public class DatabaseManagerTest {
 
 
   @Test
-  @DisplayName("Should return 'SUCCESS' if the food item is correctly inserted ")
-  public void successInsertingFoodItem() throws SQLException {
-    LocalDate date = LocalDate.parse("2022-12-07");
+  @DisplayName("Should return 'UNEXPECTED_ERROR' if the food item is not inserted correctly")
+  public void failInsertingFoodItem() throws SQLException {
+    LocalDate date = LocalDate.parse("30/12/2022", Logger.dateFormatter);
     DatabaseManager.getInstance().insertMeal(MealPeriod.LUNCH, date);
     Meal meal = DatabaseManager.getInstance().getMeal(date,MealPeriod.LUNCH);
-
-    assertEquals(MealFoodItemInsertionResult.SUCCESS, DatabaseManager.getInstance().insertFoodItem(meal,7,"test"));
+  
+    assertEquals(MealFoodItemInsertionResult.UNEXPECTED_ERROR, DatabaseManager.getInstance().insertFoodItem(meal,7,"test"));
   }
 }
 
