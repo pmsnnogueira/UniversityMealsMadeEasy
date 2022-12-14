@@ -215,6 +215,14 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The getMeal method, return all the meals for a specific date and meal period.
+   * @param date
+   * @param period
+   * @return
+   * @throws NullPointerException
+   */
   public Meal getMeal(LocalDate date, MealPeriod period)
       throws NullPointerException {
     ResultSet resultSet;
@@ -240,6 +248,13 @@ public class DatabaseManager {
     }
     return null;
   }
+
+  /**
+   * The getTimeSlots method, return all the time Slots for a specific meal.
+   * @param meal
+   * @return
+   * @throws NullPointerException
+   */
   public List<TimeSlot> getTimeSlots(Meal meal)
       throws NullPointerException {
     List<TimeSlot> timeSlots;
@@ -267,6 +282,13 @@ public class DatabaseManager {
       return null;
     }
   }
+
+  /**
+   * The getTicketItems method, return all the food items for a specific ticket
+   * @param ticket
+   * @return
+   * @throws NullPointerException
+   */
   private List<FoodItem> getTicketItems(Ticket ticket)
       throws NullPointerException {
     ResultSet resultSet;
@@ -294,6 +316,13 @@ public class DatabaseManager {
       return null;
     }
   }
+
+  /**
+   * The getTimeSlotTickets method, return all the tickets for a specific timeslot.
+   * @param slot
+   * @return
+   * @throws NullPointerException
+   */
   private List<Ticket> getTimeSlotTickets(TimeSlot slot)
       throws NullPointerException {
     ResultSet resultSet;
@@ -321,6 +350,14 @@ public class DatabaseManager {
       return null;
     }
   }
+
+  /**
+   * The getOrderedMealsFoodItems method, return all the
+   * ordered meals with items for a specific timeslot.
+   * @param slot
+   * @return
+   * @throws NullPointerException
+   */
   public List<List<FoodItem>> getOrderedMealsFoodItems(TimeSlot slot)
       throws NullPointerException {
     List<List<FoodItem>> orderedMealsFoodItems;
@@ -341,6 +378,11 @@ public class DatabaseManager {
     }
     return orderedMealsFoodItems;
   }
+
+  /**
+   * The getMeals method, return all the meals.
+   * @return meals
+   */
   private List<Meal> getMeals() {
     ResultSet resultSet;
     List<Meal> meals;
@@ -362,6 +404,12 @@ public class DatabaseManager {
       return null;
     }
   }
+
+  /**
+   * The getPreviousMeals method, return all the
+   * previous meals.
+   * @return
+   */
   public List<Meal> getPreviousMeals() {
     List<Meal> previousMeals = getMeals();
     Iterator<Meal> iterator;
@@ -377,6 +425,13 @@ public class DatabaseManager {
     }
     return previousMeals;
   }
+
+  /**
+   * The getReviews method, return all the reviews for a specific meal.
+   * @param meal
+   * @return
+   * @throws NullPointerException
+   */
   public List<Review> getReviews(Meal meal) throws NullPointerException {
     ResultSet resultSet;
     List<Review> reviews;
@@ -407,6 +462,13 @@ public class DatabaseManager {
       return null;
     }
   }
+
+  /**
+   * The getFoodItems method, return all the food items for a specific meal.
+   * @param meal
+   * @return
+   * @throws NullPointerException
+   */
   public List<FoodItem> getFoodItems(Meal meal) throws NullPointerException {
     ResultSet resultSet;
     List<FoodItem> foodItems;
@@ -432,6 +494,12 @@ public class DatabaseManager {
       return null;
     }
   }
+  /**
+   * Validates a ticket with the specified ID.
+   *
+   * @param id the ID of the ticket to validate
+   * @return the result of the ticket validation
+   */
   public TicketValidationResult validateTicket(int id) {
     try (Statement statement = connection.createStatement()) {
       if (!statement.executeQuery(String.format("""
@@ -457,6 +525,14 @@ public class DatabaseManager {
       return TicketValidationResult.UNEXPECTED_ERROR;
     }
   }
+  /**
+   * Returns the last ID for the specified table.
+   *
+   * @param table the table to get the last ID from
+   * @return the last ID, or -1 if the table is empty
+   * @throws SQLException if an error occurs while querying the database
+   * @throws NullPointerException if the input argument is null
+   */
   private int getLastId(Table table) throws SQLException {
     ResultSet resultSet;
 
@@ -472,6 +548,14 @@ public class DatabaseManager {
       return resultSet.getInt("N");
     }
   }
+
+  /**
+   * Inserts a meal record into the database allowing to specify mealPeriod and date
+   * @param mealPeriod the period of the meal (lunch or dinner)
+   * @param date the date of the meal
+   * @return the result of the meal insertion
+   * @throws NullPointerException if either input argument is null
+   */
   public MealInsertionResult insertMeal(MealPeriod mealPeriod,
                                         LocalDate date)
       throws NullPointerException {
@@ -517,6 +601,17 @@ public class DatabaseManager {
       return null;
     }
   }
+
+  /**
+   * Method called to add a new food item to a meal
+   * Allows to specify price and description through its arguments
+   * @param meal
+   * @param price
+   * @param description
+   * @return
+   * @throws NullPointerException
+   * @throws IllegalArgumentException
+   */
   public MealFoodItemInsertionResult insertFoodItem(Meal meal, float price,
                                                     String description)
       throws NullPointerException, IllegalArgumentException {
@@ -543,6 +638,12 @@ public class DatabaseManager {
       return MealFoodItemInsertionResult.UNEXPECTED_ERROR;
     }
   }
+
+  /**
+   * Clears all the meal food items in the meal with all the checks and balances
+   * @param meal
+   * @return
+   */
   public MealFoodItemsClearingResult clearFoodItems(Meal meal) {
     if (meal == null)
       throw new NullPointerException("meal cannot be null");
@@ -569,6 +670,13 @@ public class DatabaseManager {
       return MealFoodItemsClearingResult.UNEXPECTED_ERROR;
     }
   }
+
+  /**
+   * Serves to configure the maximum slot capacity in the database
+   * @param slot
+   * @param capacity
+   * @return
+   */
   public TimeSlotCapacityConfiguringResult configureCapacity(TimeSlot slot,
                                                              int capacity) {
     ResultSet resultSet;
@@ -597,6 +705,10 @@ public class DatabaseManager {
       return TimeSlotCapacityConfiguringResult.UNEXPECTED_ERROR;
     }
   }
+
+  /**
+   * Closes the connection to the database
+   */
   public void close() {
     try {
       connection.close();
