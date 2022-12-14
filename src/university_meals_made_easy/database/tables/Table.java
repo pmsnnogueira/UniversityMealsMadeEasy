@@ -1,5 +1,9 @@
 package university_meals_made_easy.database.tables;
 
+/**
+ * Enum that defines all the tables that exist
+ * in our database
+ */
 public enum Table {
   MEAL,
   REFUND,
@@ -11,6 +15,10 @@ public enum Table {
   TICKET_FOOD_ITEM,
   TIME_SLOT;
 
+  /**
+   *
+   * @return the enum that corresponds to a specific string
+   */
   @Override
   public String toString() {
     return (switch (this) {

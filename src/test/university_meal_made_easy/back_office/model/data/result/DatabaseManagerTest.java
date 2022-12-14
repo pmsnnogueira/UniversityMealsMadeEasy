@@ -52,14 +52,7 @@ public class DatabaseManagerTest {
       DatabaseManager.getInstance().insertFoodItem(meal,1,"aaaa");
     });
   }
-  @Test
-  @DisplayName("Should throw 'NullPointerException' if the provided price is negative ")
-  public void  providedPriceIsNegative() {
-    Meal meal = new Meal(1,MealPeriod.LUNCH,"12:12:12");
-    assertThrows(NullPointerException.class,()-> {
-      DatabaseManager.getInstance().insertFoodItem(meal,-1,"aaaa");
-    });
-  }
+
 
   @Test
   @DisplayName("Should return 'SUCCESS' if the food item is correctly inserted ")
