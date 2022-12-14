@@ -5,7 +5,10 @@ import university_meals_made_easy.Logger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-
+/**
+ *This class encapsulates the necessary data that define a Review
+ *
+ */
 public class Review extends Transaction {
   private final int id;
   private final int appUserId;
@@ -14,6 +17,19 @@ public class Review extends Transaction {
   private final int rating;
   private final String comment;
 
+  /**
+   * Constructor for Review class that
+   * receives some information about the refund,
+   * and assign them to the local variables.
+   * @param id
+   * @param appUserId
+   * @param ticketId
+   * @param dateTimeString
+   * @param rating
+   * @param comment
+   * @throws NullPointerException
+   * @throws IllegalArgumentException
+   */
   public Review(int id, int appUserId, int ticketId,
                 String dateTimeString, int rating, String comment)
       throws NullPointerException, IllegalArgumentException {
@@ -36,24 +52,56 @@ public class Review extends Transaction {
     this.rating = rating;
     this.comment = comment;
   }
+
+  /**
+   *
+   * @return the id of the refund itself
+   */
   public int getId() {
     return id;
   }
+
+  /**
+   *
+   * @return the id of the user
+   */
   public int getAppUserId() {
     return appUserId;
   }
+
+  /**
+   *
+   * @return the id of the ticker
+   */
   public int getTicketId() {
     return ticketId;
   }
+
+  /**
+   *
+   * @return the date of that the review was made
+   */
   public LocalDateTime getDateTime() {
     return dateTime;
   }
+
+
   public String getDateTimeAsString() {
     return dateTime.format(Logger.dateTimeFormatter);
   }
+
+  /**
+   *
+   * @return the rating of the review
+   */
   public int getRating() {
     return rating;
   }
+
+  /**
+   *
+   * @return the comment of the review
+   */
   public String getComment() {
     return comment;
   }

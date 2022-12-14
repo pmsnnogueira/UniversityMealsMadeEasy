@@ -16,11 +16,20 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The DatabaseManager Class is responsible to create a new database,
+ * or can connect with an existing one.
+ */
 public class DatabaseManager {
   public final static String databaseFilePath = "university_meals_made_easy.db";
   private static DatabaseManager instance;
   private final Connection connection;
 
+  /**
+   * Constructor for DatabaseManager class that verify if exists a db,
+   * if not, a new database is created with the following methods.
+   * @throws SQLException
+   */
   private DatabaseManager() throws SQLException {
     boolean existedBefore;
 
@@ -39,11 +48,22 @@ public class DatabaseManager {
       createTopOffTable();
     }
   }
+
+  /**
+   * The getInstance, returns the databaseManager instance.
+   * @return instance
+   * @throws SQLException
+   */
   public static DatabaseManager getInstance() throws SQLException {
     if (instance == null)
       instance = new DatabaseManager();
     return instance;
   }
+
+  /**
+   * The createMealTable method, creates the table meal in database.
+   * @throws SQLException
+   */
   private void createMealTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -55,6 +75,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createAppUserTable method, creates the table app_user in database.
+   * @throws SQLException
+   */
   private void createAppUserTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -66,6 +91,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createTimeSlotTable method, creates the table time_slot in database.
+   * @throws SQLException
+   */
   private void createTimeSlotTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -79,6 +109,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createTicketTable method, creates the table ticket in database.
+   * @throws SQLException
+   */
   private void createTicketTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -92,6 +127,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createRefundTable method, creates the table refund in database.
+   * @throws SQLException
+   */
   private void createRefundTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -104,6 +144,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createFoodItemTable method, creates the table food_item in database.
+   * @throws SQLException
+   */
   private void createFoodItemTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -116,6 +161,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createTicketFoodItemTable method, creates the table ticket_food_item in database.
+   * @throws SQLException
+   */
   private void createTicketFoodItemTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -127,6 +177,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createReviewTable method, creates the table review in database.
+   * @throws SQLException
+   */
   private void createReviewTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -141,6 +196,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createTopOffTable method, creates the table top_off in database.
+   * @throws SQLException
+   */
   private void createTopOffTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -153,6 +213,14 @@ public class DatabaseManager {
           """);
     }
   }
+
+
+  /**
+   * The getBalance method, returns the userId balance
+   * @param userId
+   * @return
+   * @throws IllegalArgumentException
+   */
   public float getBalance(int userId) throws IllegalArgumentException {
     ResultSet resultSet;
 
@@ -171,6 +239,14 @@ public class DatabaseManager {
       return -1;
     }
   }
+
+  /**
+   * The topOffBalance method can add money to the user account.
+   * @param userId
+   * @param value
+   * @return
+   * @throws IllegalArgumentException
+   */
   public BalanceTopOffResult topOffBalance(int userId, float value)
       throws IllegalArgumentException {
     ResultSet resultSet;
@@ -202,6 +278,14 @@ public class DatabaseManager {
       return BalanceTopOffResult.UNEXPECTED_ERROR;
     }
   }
+
+  /**
+   * The getMeal method, return all the meals from a specific date and meal period.
+   * @param date
+   * @param period
+   * @return
+   * @throws NullPointerException
+   */
   public Meal getMeal(LocalDate date, MealPeriod period)
       throws NullPointerException {
     ResultSet resultSet;
@@ -227,6 +311,14 @@ public class DatabaseManager {
     }
     return null;
   }
+
+
+  /**
+   * The getAvailableTimeSlots method, returns the available timeslots from a specific meal.
+   * @param meal
+   * @return
+   * @throws NullPointerException
+   */
   public List<TimeSlot> getAvailableTimeSlots(Meal meal)
       throws NullPointerException {
     List<TimeSlot> availableTimeSlots;
@@ -257,6 +349,13 @@ public class DatabaseManager {
       return null;
     }
   }
+
+  /**
+   * The getFoodItems method, returns all the food items from a specific meal.
+   * @param meal
+   * @return
+   * @throws NullPointerException
+   */
   public List<FoodItem> getFoodItems(Meal meal) throws NullPointerException {
     ResultSet resultSet;
     List<FoodItem> foodItems;
@@ -282,6 +381,13 @@ public class DatabaseManager {
       return null;
     }
   }
+
+  /**
+   * The getTickets method, returns all the bought meals from a specific user
+   * @param userId
+   * @return
+   * @throws NullPointerException
+   */
   public List<Ticket> getTickets(int userId) throws NullPointerException {
     ResultSet resultSet;
     List<Ticket> tickets;
@@ -311,6 +417,13 @@ public class DatabaseManager {
       return null;
     }
   }
+
+  /**
+   * The getValidatedTickets method, returns all the tickets that have already been validated from a specific user.
+   * @param userId
+   * @return
+   * @throws NullPointerException
+   */
   public List<Ticket> getValidatedTickets(int userId) throws NullPointerException {
     ResultSet resultSet;
     List<Ticket> tickets;
@@ -340,6 +453,13 @@ public class DatabaseManager {
       return null;
     }
   }
+
+  /**
+   * The getTicketItems method, return the food items from a specific ticket
+   * @param ticket
+   * @return
+   * @throws NullPointerException
+   */
   public List<FoodItem> getTicketItems(Ticket ticket)
       throws NullPointerException {
     ResultSet resultSet;
@@ -367,6 +487,12 @@ public class DatabaseManager {
       return null;
     }
   }
+
+  /**
+   * The getTransactionHistory method, returns all the transactions from a specific user
+   * @param userId
+   * @return
+   */
   public List<Transaction> getTransactionHistory(int userId) {
     List<Transaction> transactions;
     ResultSet resultSet;
@@ -431,6 +557,16 @@ public class DatabaseManager {
       return null;
     }
   }
+
+  /**
+   * The buy method, assign a meal for a user with a specific user, timeslot and fooditems
+   * @param userId
+   * @param slot
+   * @param foodItems
+   * @return
+   * @throws IllegalArgumentException
+   * @throws NullPointerException
+   */
   public BuyResult buy(int userId, TimeSlot slot, List<FoodItem> foodItems)
       throws IllegalArgumentException, NullPointerException {
     ResultSet resultSet;
@@ -491,6 +627,15 @@ public class DatabaseManager {
       return BuyResult.UNEXPECTED_ERROR;
     }
   }
+
+  /**
+   * The refund methods, is responsible for controlling the ability to return a user's meal.
+   * @param userId
+   * @param ticket
+   * @return
+   * @throws IllegalArgumentException
+   * @throws NullPointerException
+   */
   public RefundResult refund(int userId, Ticket ticket)
       throws IllegalArgumentException, NullPointerException {
     if (userId == -1)
@@ -552,6 +697,17 @@ public class DatabaseManager {
       return RefundResult.UNEXPECTED_ERROR;
     }
   }
+
+  /**
+   * The review method can insert a user review from a specific meal into the database.
+   * @param userId
+   * @param ticket
+   * @param rating
+   * @param comment
+   * @return
+   * @throws IllegalArgumentException
+   * @throws NullPointerException
+   */
   public ReviewResult review(int userId, Ticket ticket, int rating,
                              String comment)
       throws IllegalArgumentException, NullPointerException {
@@ -575,11 +731,21 @@ public class DatabaseManager {
       return ReviewResult.UNEXPECTED_ERROR;
     }
   }
+
+  /**
+   * The close method, closes the connection with database
+   */
   public void close() {
     try {
       connection.close();
     } catch (SQLException ignored) {}
   }
+
+  /**
+   * The login method verify if the user is already in database, if not a new user is created.
+   * @param username
+   * @return
+   */
   public LoginResult login(String username) {
     try (Statement statement = connection.createStatement()) {
       if (!statement.executeQuery(String.format("""
@@ -597,6 +763,13 @@ public class DatabaseManager {
       return LoginResult.UNEXPECTED_ERROR;
     }
   }
+
+  /**
+   * The getLastId method returns the maximum id that is currently in table.
+   * @param table
+   * @return
+   * @throws SQLException
+   */
   private int getLastId(Table table) throws SQLException {
     ResultSet resultSet;
 
@@ -612,6 +785,12 @@ public class DatabaseManager {
       return resultSet.getInt("N");
     }
   }
+
+  /**
+   * The getId method, returns the id from a username.
+   * @param username
+   * @return
+   */
   public int getId(String username) {
     ResultSet resultSet;
 
