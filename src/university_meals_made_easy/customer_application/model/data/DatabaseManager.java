@@ -475,13 +475,14 @@ public class DatabaseManager {
           AND ticket_food_item.ticket_id = %d;
           """, ticket.getId()));
       foodItems = new ArrayList<>();
-      while (resultSet.next())
+      while (resultSet.next()) {
         foodItems.add(new FoodItem(
             resultSet.getInt("id"),
             resultSet.getInt("meal_id"),
             resultSet.getFloat("price"),
             resultSet.getString("description")
         ));
+      }
       return foodItems;
     } catch (SQLException e) {
       return null;
@@ -670,10 +671,7 @@ public class DatabaseManager {
           DELETE FROM ticket
           WHERE id = %d
           """, ticket.getId()));
-      statement.execute(String.format("""
-          DELETE FROM ticket_food_item
-          WHERE ticket_id = %d
-          """, ticket.getId()));
+
       statement.execute(String.format("""
           INSERT INTO refund
           VALUES (NULL, %d, %d, '%s');
@@ -691,6 +689,10 @@ public class DatabaseManager {
           SET balance = balance + %f
           WHERE id = %d
           """, price, userId));
+      statement.execute(String.format("""
+          DELETE FROM ticket_food_item
+          WHERE ticket_id = %d
+          """, ticket.getId()));
       return RefundResult.SUCCESS;
     } catch (SQLException e) {
       e.printStackTrace();
