@@ -18,11 +18,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * This class has all the methods necessary method to interact with the database
+ */
 public class DatabaseManager {
   public final static String databaseFilePath = "university_meals_made_easy.db";
   private static DatabaseManager instance;
   private final Connection connection;
 
+
+  /**
+   * Constructor for DatabaseManager class that verify if exists a db,
+   * if not, a new database is created with the following methods.
+   * @throws SQLException
+   */
   private DatabaseManager() throws SQLException {
     boolean existedBefore;
 
@@ -41,11 +50,22 @@ public class DatabaseManager {
       createTopOffTable();
     }
   }
+
+  /**
+   * The getInstance, returns the databaseManager instance.
+   * @return instance
+   * @throws SQLException
+   */
   public static DatabaseManager getInstance() throws SQLException {
     if (instance == null)
       instance = new DatabaseManager();
     return instance;
   }
+
+  /**
+   * The createMealTable method, creates the table meal in database.
+   * @throws SQLException
+   */
   private void createMealTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -57,6 +77,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createAppUserTable method, creates the table app_user in database.
+   * @throws SQLException
+   */
   private void createAppUserTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -68,6 +93,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createTimeSlotTable method, creates the table time_slot in database.
+   * @throws SQLException
+   */
   private void createTimeSlotTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -81,6 +111,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createTicketTable method, creates the table ticket in database.
+   * @throws SQLException
+   */
   private void createTicketTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -94,6 +129,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createRefundTable method, creates the table refund in database.
+   * @throws SQLException
+   */
   private void createRefundTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -106,6 +146,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createFoodItemTable method, creates the table food_item in database.
+   * @throws SQLException
+   */
   private void createFoodItemTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -118,6 +163,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createTicketFoodItemTable method, creates the table ticket_food_item in database.
+   * @throws SQLException
+   */
   private void createTicketFoodItemTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -129,6 +179,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createReviewTable method, creates the table review in database.
+   * @throws SQLException
+   */
   private void createReviewTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""
@@ -143,6 +198,11 @@ public class DatabaseManager {
           """);
     }
   }
+
+  /**
+   * The createTopOffTable method, creates the table top_off in database.
+   * @throws SQLException
+   */
   private void createTopOffTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.execute("""

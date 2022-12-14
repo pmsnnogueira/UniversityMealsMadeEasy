@@ -5,6 +5,10 @@ import university_meals_made_easy.Logger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
+/**
+ *This class encapsulates the necessary data that define a Ticket
+ *
+ */
 public class Ticket extends Transaction {
   private final int id;
   private final int appUserId;
@@ -12,6 +16,18 @@ public class Ticket extends Transaction {
   private final LocalDateTime dateTimeOfPurchase;
   private final LocalDateTime dateTimeOfValidation;
 
+  /**
+   * Constructor for Ticket class that
+   * receives some information about the refund,
+   * and assign them to the local variables.
+   * @param id
+   * @param appUserId
+   * @param timeSlotId
+   * @param dateTimeOfPurchaseString
+   * @param dateTimeOfValidationString
+   * @throws NullPointerException
+   * @throws IllegalArgumentException
+   */
   public Ticket(int id, int appUserId, int timeSlotId,
                 String dateTimeOfPurchaseString,
                 String dateTimeOfValidationString)
@@ -40,15 +56,31 @@ public class Ticket extends Transaction {
             "date time of validation must have valid format");
       }
   }
+  /**
+   *
+   * @return the id of the refund
+   */
   public int getId() {
     return id;
   }
+
+  /**
+   *
+   * @return the id of the user
+   */
   public int getAppUserId() {
     return appUserId;
   }
+
+  /**
+   *
+   * @return the id of the time slot
+   */
   public int getTimeSlotId() {
     return timeSlotId;
   }
+
+
   public LocalDateTime getDateTimeOfPurchase() {
     return dateTimeOfPurchase;
   }
@@ -69,3 +101,4 @@ public class Ticket extends Transaction {
     return String.format("Ticket %d. Bought on %s", id, getDateTimeOfPurchaseAsString());
   }
 }
+

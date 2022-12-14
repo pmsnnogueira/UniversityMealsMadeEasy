@@ -14,8 +14,7 @@ import java.util.List;
 
 /**
  * Class that manages user login state
- * logs in or out users and checks for the appropriate errors or exceptions of this process
- * @version 1.0
+ * logs in or out users and checks for the appropriate errors or exceptions to this process
  */
 public class DataManager {
   private final static String TAG = "DataManager";
@@ -24,7 +23,7 @@ public class DataManager {
 
   /**
    * Method for login of user according to username
-   * recieves username and checks for its validaty before setting the current user as the user it recieved
+   * receives username and checks for its validaty before setting the current user as the user it received.
    * @param username
    */
   public LoginResult login(String username) throws NullPointerException {
@@ -61,6 +60,11 @@ public class DataManager {
           "cannot logout if not logged in");
     userId = -1;
   }
+
+  /**
+   * Method for getBalance from a currently userId.
+   * @return
+   */
   public float getBalance() {
     try {
       return DatabaseManager.getInstance().getBalance(userId);
@@ -68,6 +72,11 @@ public class DataManager {
       return -1;
     }
   }
+
+  /**
+   * Method for add money into a specific userId.
+   * @return
+   */
   public BalanceTopOffResult topOffBalance(float value) {
     try {
       return DatabaseManager.getInstance().topOffBalance(userId, value);
@@ -75,6 +84,13 @@ public class DataManager {
       return BalanceTopOffResult.UNEXPECTED_ERROR;
     }
   }
+
+  /**
+   * Method to return a meal from a specific date and period.
+   * @param date
+   * @param period
+   * @return
+   */
   public Meal getMeal(LocalDate date, MealPeriod period) {
     try {
       return DatabaseManager.getInstance().getMeal(date, period);
@@ -82,6 +98,12 @@ public class DataManager {
       return null;
     }
   }
+
+  /**
+   * Method to return the availableTimeSlots from a specific meal.
+   * @param meal
+   * @return
+   */
   public List<TimeSlot> getAvailableTimeSlots(Meal meal) {
     try {
       return DatabaseManager.getInstance().getAvailableTimeSlots(meal);
@@ -89,6 +111,12 @@ public class DataManager {
       return null;
     }
   }
+
+  /**
+   * Method to return the foodItems from a specific meal.
+   * @param meal
+   * @return
+   */
   public List<FoodItem> getFoodItems(Meal meal) {
     try {
       return DatabaseManager.getInstance().getFoodItems(meal);
@@ -96,6 +124,11 @@ public class DataManager {
       return null;
     }
   }
+
+  /**
+   * Method to return the tickets from a specific user.
+   * @return
+   */
   public List<Ticket> getTickets() {
     try {
       return DatabaseManager.getInstance().getTickets(userId);
@@ -103,6 +136,11 @@ public class DataManager {
       return null;
     }
   }
+
+  /**
+   * Method to return all the tickets that have already been validated from a specific user.
+   * @return
+   */
   public List<Ticket> getValidatedTickets() {
     try {
       return DatabaseManager.getInstance().getValidatedTickets(userId);
@@ -111,6 +149,11 @@ public class DataManager {
     }
   }
 
+  /**
+   * Method to return the food items from a specific ticket.
+   * @param ticket
+   * @return
+   */
   public List<FoodItem> getTicketItems(Ticket ticket) {
     try {
       return DatabaseManager.getInstance().getTicketItems(ticket);
@@ -118,6 +161,11 @@ public class DataManager {
       return null;
     }
   }
+
+  /**
+   * Method to return the transactions made by a user.
+   * @return
+   */
   public List<Transaction> getTransactionHistory() {
     try {
       return DatabaseManager.getInstance().getTransactionHistory(userId);
@@ -125,6 +173,13 @@ public class DataManager {
       return null;
     }
   }
+
+  /**
+   * Method to assign a meal for a user.
+   * @param slot
+   * @param foodItems
+   * @return
+   */
   public BuyResult buy(TimeSlot slot, List<FoodItem> foodItems) {
     try {
       return DatabaseManager.getInstance().buy(userId, slot, foodItems);
@@ -132,6 +187,12 @@ public class DataManager {
       return BuyResult.UNEXPECTED_ERROR;
     }
   }
+
+  /**
+   * Method that can insert a user's meal
+   * @param ticket
+   * @return
+   */
   public RefundResult refund(Ticket ticket) {
     try {
       return DatabaseManager.getInstance().refund(userId, ticket);
@@ -139,6 +200,14 @@ public class DataManager {
       return RefundResult.UNEXPECTED_ERROR;
     }
   }
+
+  /**
+   * Method that can insert a meal review
+   * @param ticket
+   * @param rating
+   * @param comment
+   * @return
+   */
   public ReviewResult review(Ticket ticket, int rating,
                              String comment) {
     try {
@@ -149,6 +218,10 @@ public class DataManager {
     }
   }
 
+  /**
+   * Method that can return a username saved in the local variable.
+   * @return username
+   */
   public String getUsername() {
     return username;
   }
