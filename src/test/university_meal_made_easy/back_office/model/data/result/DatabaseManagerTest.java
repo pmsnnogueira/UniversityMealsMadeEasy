@@ -56,13 +56,13 @@ public class DatabaseManagerTest {
 
 
   @Test
-  @DisplayName("Should return 'UNEXPECTED_ERROR' if the food item is not inserted correctly")
-  public void failInsertingFoodItem() throws SQLException {
+  @DisplayName("Should return 'SUCCESS' if the food item is inserted correctly")
+  public void successInsertingFoodItem() throws SQLException {
     LocalDate date = LocalDate.parse("30/12/2022", Logger.dateFormatter);
     DatabaseManager.getInstance().insertMeal(MealPeriod.LUNCH, date);
     Meal meal = DatabaseManager.getInstance().getMeal(date,MealPeriod.LUNCH);
   
-    assertEquals(MealFoodItemInsertionResult.UNEXPECTED_ERROR, DatabaseManager.getInstance().insertFoodItem(meal,7,"test"));
+    assertEquals(MealFoodItemInsertionResult.SUCCESS, DatabaseManager.getInstance().insertFoodItem(meal,7,"test"));
   }
 }
 

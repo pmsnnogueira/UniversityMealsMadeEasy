@@ -33,7 +33,7 @@ public class DatabaseManagerTest {
     @Test
     @DisplayName("Should throw 'NullPointerException' if the provided FoodItems are NULL ")
     public void foodItemsAreNull(){
-        TimeSlot ts  = new TimeSlot(1,1,"test","12:11:11",1);
+        TimeSlot ts  = new TimeSlot(1,1,"12:00:00","12:15:00",1);
         List<FoodItem> fd = null;
         assertThrows(NullPointerException.class,()-> {
             DatabaseManager.getInstance().buy(1,ts,fd);
