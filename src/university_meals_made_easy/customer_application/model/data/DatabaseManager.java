@@ -451,6 +451,7 @@ public class DatabaseManager {
     balance = getBalance(userId);
     if (balance < cost)
       return BuyResult.INSUFFICIENT_BALANCE;
+    LocalDate localDate = LocalDate.now();
     try (Statement statement = connection.createStatement()) {
       resultSet = statement.executeQuery(String.format("""
           SELECT COUNT(*) AS "N"
@@ -471,6 +472,15 @@ public class DatabaseManager {
             INSERT INTO ticket_food_item
             VALUES (%d, %d);
             """, ticketId, foodItem.getId()));
+      ResultSet resultSet1 = statement.executeQuery(String.format("""
+          SELECT *
+          FROM meal
+          WHERE id = %d
+          AND date_of_meal = '%s'
+          """, slot.getMealId(),localDate.format(Logger.dateFormatter)));
+      if(resultSet1.next()) {
+        cost += cost * 0.15;
+      }
       statement.execute(String.format("""
           UPDATE app_user
           SET balance = %f
@@ -488,9 +498,36 @@ public class DatabaseManager {
     if (ticket == null)
       throw new NullPointerException("ticket cannot be null");
     try (Statement statement = connection.createStatement()) {
+      ResultSet resultSet = statement.executeQuery(String.format("""
+          SELECT *
+          FROM time_slot
+          WHERE id = %d
+          """, ticket.getTimeSlotId()));
+      if(resultSet.next()) {
+        TimeSlot timeSlot = new TimeSlot(
+            resultSet.getInt("id"),
+            resultSet.getInt("meal_id"),
+            resultSet.getString("time_of_start"),
+            resultSet.getString("time_of_end"),
+            resultSet.getInt("capacity")
+        );
+        LocalDate localDate = LocalDate.now();
+        if(statement.executeQuery(String.format("""
+          SELECT *
+          FROM meal
+          WHERE date_of_meal = '%s'
+          AND id = %d
+          """, localDate.format(Logger.dateFormatter), timeSlot.getMealId())).next()) {
+          return RefundResult.UNEXPECTED_ERROR;
+        }
+      }
       statement.execute(String.format("""
           DELETE FROM ticket
           WHERE id = %d
+          """, ticket.getId()));
+      statement.execute(String.format("""
+          DELETE FROM ticket_food_item
+          WHERE ticket_id = %d
           """, ticket.getId()));
       statement.execute(String.format("""
           INSERT INTO refund
@@ -511,6 +548,7 @@ public class DatabaseManager {
           """, price, userId));
       return RefundResult.SUCCESS;
     } catch (SQLException e) {
+      e.printStackTrace();
       return RefundResult.UNEXPECTED_ERROR;
     }
   }
