@@ -92,6 +92,7 @@ public class TicketValidationPane extends BorderPane {
             "Ticket does not exist");
         case TICKET_ALREADY_REFUNDED -> new AlertBox("Error",
             "Ticket already refunded");
+        case WRONG_TIME_SLOT -> new AlertBox("Warning", "Wrong timeslot, applying fee");
       };
       alertBox.show();
       ticketIdTextField.clear();

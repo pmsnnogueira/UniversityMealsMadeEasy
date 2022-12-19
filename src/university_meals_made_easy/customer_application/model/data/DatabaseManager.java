@@ -664,14 +664,9 @@ public class DatabaseManager {
           WHERE date_of_meal = '%s'
           AND id = %d
           """, localDate.format(Logger.dateFormatter), timeSlot.getMealId())).next()) {
-          return RefundResult.UNEXPECTED_ERROR;
+          return RefundResult.TODAY;
         }
       }
-      statement.execute(String.format("""
-          DELETE FROM ticket
-          WHERE id = %d
-          """, ticket.getId()));
-
       statement.execute(String.format("""
           INSERT INTO refund
           VALUES (NULL, %d, %d, '%s');
@@ -689,10 +684,6 @@ public class DatabaseManager {
           SET balance = balance + %f
           WHERE id = %d
           """, price, userId));
-      statement.execute(String.format("""
-          DELETE FROM ticket_food_item
-          WHERE ticket_id = %d
-          """, ticket.getId()));
       return RefundResult.SUCCESS;
     } catch (SQLException e) {
       e.printStackTrace();

@@ -49,6 +49,7 @@ public class DatabaseManager {
       createReviewTable();
       createTopOffTable();
     }
+    connection.setAutoCommit(false);
   }
 
   /**
@@ -68,7 +69,7 @@ public class DatabaseManager {
    */
   private void createMealTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      statement.execute("""
+      statement.executeUpdate("""
           CREATE TABLE meal (
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               meal_period TEXT NOT NULL,
@@ -84,7 +85,7 @@ public class DatabaseManager {
    */
   private void createAppUserTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      statement.execute("""
+      statement.executeUpdate("""
           CREATE TABLE app_user (
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               username TEXT UNIQUE NOT NULL,
@@ -100,7 +101,7 @@ public class DatabaseManager {
    */
   private void createTimeSlotTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      statement.execute("""
+      statement.executeUpdate("""
           CREATE TABLE time_slot (
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               meal_id INTEGER REFERENCES meal (id) NOT NULL,
@@ -118,7 +119,7 @@ public class DatabaseManager {
    */
   private void createTicketTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      statement.execute("""
+      statement.executeUpdate("""
           CREATE TABLE ticket (
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               app_user_id INTEGER REFERENCES app_user (id) NOT NULL,
@@ -136,7 +137,7 @@ public class DatabaseManager {
    */
   private void createRefundTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      statement.execute("""
+      statement.executeUpdate("""
           CREATE TABLE refund (
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               app_user_id INTEGER REFERENCES app_user (id) NOT NULL,
@@ -153,7 +154,7 @@ public class DatabaseManager {
    */
   private void createFoodItemTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      statement.execute("""
+      statement.executeUpdate("""
           CREATE TABLE food_item (
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               meal_id INTEGER REFERENCES meal (id) NOT NULL,
@@ -170,7 +171,7 @@ public class DatabaseManager {
    */
   private void createTicketFoodItemTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      statement.execute("""
+      statement.executeUpdate("""
           CREATE TABLE ticket_food_item (
               ticket_id INTEGER REFERENCES ticket (id) NOT NULL,
               food_item_id INTEGER REFERENCES food_item (id) NOT NULL,
@@ -186,7 +187,7 @@ public class DatabaseManager {
    */
   private void createReviewTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      statement.execute("""
+      statement.executeUpdate("""
           CREATE TABLE review (
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               app_user_id INTEGER REFERENCES app_user (id) NOT NULL,
@@ -205,7 +206,7 @@ public class DatabaseManager {
    */
   private void createTopOffTable() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      statement.execute("""
+      statement.executeUpdate("""
           CREATE TABLE top_off (
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               app_user_id INTEGER REFERENCES app_user(id),
@@ -501,6 +502,8 @@ public class DatabaseManager {
    * @return the result of the ticket validation
    */
   public TicketValidationResult validateTicket(int id) {
+    ResultSet resultSet;
+
     try (Statement statement = connection.createStatement()) {
       if (!statement.executeQuery(String.format("""
           SELECT *
@@ -515,13 +518,42 @@ public class DatabaseManager {
           AND datetime_of_validation IS NULL;
           """, id)).next())
         return TicketValidationResult.TICKET_ALREADY_VALIDATED;
-      statement.execute(String.format("""
+      statement.executeUpdate(String.format("""
           UPDATE ticket
           SET datetime_of_validation = '%s'
           WHERE id = %d;
           """, LocalDateTime.now().format(Logger.dateTimeFormatter), id));
+      connection.commit();
+      resultSet = statement.executeQuery(String.format("""
+          SELECT TIME('%s') BETWEEN
+                  TIME(time_of_start)
+                  AND TIME(time_of_end)
+                  AS "correct_time_slot"
+          FROM time_slot
+          WHERE id = (SELECT time_slot_id
+                      FROM ticket
+                      WHERE id = %d);
+          """, LocalDateTime.now().format(Logger.timeFormatter), id));
+      if (!resultSet.next())
+        return TicketValidationResult.UNEXPECTED_ERROR;
+      if (!resultSet.getBoolean("correct_time_slot")) {
+        statement.executeUpdate(String.format("""
+            UPDATE app_user
+            SET balance = balance - 0.3 * (SELECT SUM(price)
+                                    FROM food_item
+                                    WHERE id IN (SELECT food_item_id
+                                                FROM ticket_food_item
+                                                WHERE ticket_id = %d))
+            WHERE id = (SELECT app_user_id
+            FROM ticket
+            WHERE id = %d);
+            """, id, id));
+        connection.commit();
+        return TicketValidationResult.WRONG_TIME_SLOT;
+      }
       return TicketValidationResult.SUCCESS;
     } catch (SQLException e) {
+      e.printStackTrace();
       return TicketValidationResult.UNEXPECTED_ERROR;
     }
   }
@@ -581,7 +613,7 @@ public class DatabaseManager {
           """, mealPeriod, date.format(Logger.dateFormatter))).next())
         return MealInsertionResult.ALREADY_EXISTS;
       mealId = getLastId(Table.MEAL) + 1;
-      statement.execute(String.format("""
+      statement.executeUpdate(String.format("""
           INSERT INTO meal
           VALUES (%d, '%s', '%s');
           """, mealId, mealPeriod,
@@ -591,13 +623,18 @@ public class DatabaseManager {
       else
         mealTimeSlotsTimes = dinnerTimeSlotTimes;
       for (int i = 0; i < mealTimeSlotsTimes.length - 1; i++) {
-        statement.execute(String.format("""
+        statement.executeUpdate(String.format("""
             INSERT INTO time_slot
             VALUES (NULL, %d, '%s', '%s', 30);
             """, mealId, mealTimeSlotsTimes[i], mealTimeSlotsTimes[i + 1]));
       }
+      connection.commit();
       return MealInsertionResult.SUCCESS;
     } catch (SQLException e) {
+      e.printStackTrace();
+      try {
+        connection.rollback();
+      } catch (SQLException ignored) {}
       return null;
     }
   }
@@ -629,10 +666,11 @@ public class DatabaseManager {
           AND description = '%s';
           """, meal.getId(), description)).next())
         return MealFoodItemInsertionResult.DUPLICATE_FOOD_ITEM;
-      statement.execute(String.format("""
+      statement.executeUpdate(String.format("""
           INSERT INTO food_item
           VALUES (NULL, %d, %f, '%s');
           """, meal.getId(), price, description));
+      connection.commit();
       return MealFoodItemInsertionResult.SUCCESS;
     } catch (SQLException e) {
       return MealFoodItemInsertionResult.UNEXPECTED_ERROR;
@@ -661,10 +699,11 @@ public class DatabaseManager {
           AND time_slot.meal_id = %d;
           """, meal.getId())).next())
         return MealFoodItemsClearingResult.ALREADY_BOUGHT_TICKETS;
-      statement.execute(String.format("""
+      statement.executeUpdate(String.format("""
           DELETE FROM food_item
           WHERE meal_id = %d;
           """, meal.getId()));
+      connection.commit();
       return MealFoodItemsClearingResult.SUCCESS;
     } catch (SQLException e) {
       return MealFoodItemsClearingResult.UNEXPECTED_ERROR;
@@ -695,11 +734,12 @@ public class DatabaseManager {
           && resultSet.getInt("N") > capacity)
         return TimeSlotCapacityConfiguringResult
             .ALREADY_TOO_MANY_BOUGHT_TICKETS;
-      statement.execute(String.format("""
+      statement.executeUpdate(String.format("""
           UPDATE time_slot
           SET capacity = %d
           WHERE id = %d;
           """, capacity, slot.getId()));
+      connection.commit();
       return TimeSlotCapacityConfiguringResult.SUCCESS;
     } catch (SQLException e) {
       return TimeSlotCapacityConfiguringResult.UNEXPECTED_ERROR;

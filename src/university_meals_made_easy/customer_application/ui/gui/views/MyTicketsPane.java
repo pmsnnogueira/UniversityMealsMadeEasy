@@ -114,6 +114,7 @@ public class MyTicketsPane extends BorderPane {
       RefundResult result = manager.refund(selectedTicket);
       AlertBox alertBox = switch (result) {
         case SUCCESS -> new AlertBox("Success", "Ticket refunded");
+        case TODAY -> new AlertBox("Error", "Cannot refund for the same day");
         case UNEXPECTED_ERROR -> new AlertBox("Error",
             "Unexpected error");
       };

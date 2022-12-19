@@ -78,6 +78,10 @@ public class DataManager {
    * @return
    */
   public BalanceTopOffResult topOffBalance(float value) {
+    if (value < 0)
+      return BalanceTopOffResult.NEGATIVE_VALUE;
+    if (value == 0)
+      return BalanceTopOffResult.ZERO_VALUE;
     try {
       return DatabaseManager.getInstance().topOffBalance(userId, value);
     } catch (SQLException e) {

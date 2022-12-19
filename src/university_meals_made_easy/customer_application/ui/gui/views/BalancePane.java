@@ -103,6 +103,10 @@ public class BalancePane extends BorderPane {
           "Unexpected Error");
       case USER_DOES_NOT_EXIST -> new AlertBox("Error",
           "This user does not exist");
+      case NEGATIVE_VALUE -> new AlertBox("Error",
+              "negative value introduced");
+      case ZERO_VALUE -> new AlertBox("Error",
+              "zero value introduced");
     };
     alertBox.show();
   }

@@ -1,7 +1,7 @@
 package test.university_meal_made_easy.back_office.model.data.result;
 
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 import org.junit.jupiter.api.DisplayName;
 import university_meals_made_easy.Logger;
 import university_meals_made_easy.back_office.model.data.DatabaseManager;
