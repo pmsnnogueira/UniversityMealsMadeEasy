@@ -26,7 +26,7 @@ public class ReviewMealPane extends BorderPane {
   private ListView<Ticket> ticketListView;
   private ListView<FoodItem> foodItemsListView;
   private Button btnSubmitReview;
-  private Label rateThisMealLabel;
+  private Label rateThisMealLabel, currentEvaluationLabel;
   private TextArea observationsTextArea;
   private Slider rateSlider;
 
@@ -64,10 +64,16 @@ public class ReviewMealPane extends BorderPane {
     ticketListView = new ListView<>();
     ticketListView.setPrefHeight(700);
     ticketListView.setPrefWidth(600);
+    ticketListView.setPlaceholder(new Label(
+        "You don't have any tickets right now"));
     foodItemsListView = new ListView<>();
     foodItemsListView.setPrefHeight(700);
     foodItemsListView.setPrefWidth(600);
+    foodItemsListView.setPlaceholder(new Label(
+        "Select a ticket ont the left"));
     rateThisMealLabel = new Label("Rate this meal");
+    currentEvaluationLabel = new Label("5");
+    currentEvaluationLabel.setFont(Font.font(20));
     rateSlider = new Slider();
     rateSlider.setMin(0);
     rateSlider.setMax(10);
@@ -79,7 +85,7 @@ public class ReviewMealPane extends BorderPane {
     btnSubmitReview = new Button("Reviews");
     btnSubmitReview.setPrefWidth(300);
     btnSubmitReview.setPrefHeight(100);
-    VBox rightVBox = new VBox(rateThisMealLabel, rateSlider, observationsTextArea, btnSubmitReview);
+    VBox rightVBox = new VBox(rateThisMealLabel, currentEvaluationLabel, rateSlider, observationsTextArea, btnSubmitReview);
     rightVBox.setAlignment(Pos.CENTER);
     rightVBox.setPrefWidth(500);
     rightVBox.setSpacing(30);
@@ -114,6 +120,9 @@ public class ReviewMealPane extends BorderPane {
             return;
           foodItemsListView.getItems().addAll(foodItems);
         });
+    rateSlider.valueProperty().addListener(
+        (observableValue, number, t1) -> currentEvaluationLabel.
+            setText(String.format("%.0f", rateSlider.getValue())));
 
     btnSubmitReview.setOnAction(actionEvent -> {
       Ticket selectedTicket = ticketListView.getSelectionModel().getSelectedItem();

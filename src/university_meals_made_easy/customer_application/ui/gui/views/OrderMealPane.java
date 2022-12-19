@@ -18,6 +18,7 @@ import university_meals_made_easy.database.tables.TimeSlot;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *Order Meal Pane ->
@@ -123,6 +124,24 @@ public class OrderMealPane extends BorderPane {
         alertBox.show();
         return;
       }
+
+      if(selectedMeal.getDate().equals(LocalDate.now())) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Fee");
+        dialog.setHeaderText("You are ordering a meal for today. " +
+            "An extra fee of 15% will be charged on top of your previous price." +
+            "Do you want to continue?");
+        ButtonType loginButtonType = new ButtonType("OK", ButtonBar.ButtonData.YES);
+        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+        Optional<ButtonType> confirmation_result = dialog.showAndWait();
+        if(confirmation_result.isPresent()) {
+          if(confirmation_result.get() == ButtonType.CANCEL) {
+            return;
+          }
+        }
+      }
+
       BuyResult result = manager.buy(selectedTimeSlot, selectedFoodItems);
       AlertBox alertBox = switch (result) {
         case SUCCESS -> new AlertBox("Success",

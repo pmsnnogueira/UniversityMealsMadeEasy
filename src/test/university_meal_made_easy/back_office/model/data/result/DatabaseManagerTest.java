@@ -1,16 +1,18 @@
 package test.university_meal_made_easy.back_office.model.data.result;
 
 
-import org.testng.annotations.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import university_meals_made_easy.Logger;
 import university_meals_made_easy.back_office.model.data.DatabaseManager;
 import university_meals_made_easy.back_office.model.data.result.MealFoodItemInsertionResult;
 import university_meals_made_easy.database.tables.Meal.Meal;
 import university_meals_made_easy.database.tables.Meal.MealPeriod;
 import university_meals_made_easy.database.tables.TimeSlot;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

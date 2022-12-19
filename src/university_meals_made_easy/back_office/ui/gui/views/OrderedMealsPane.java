@@ -61,6 +61,9 @@ public class OrderedMealsPane extends BorderPane {
     timeslotListView = new ListView<>();
     timeslotListView.setPrefHeight(700);
     timeslotListView.setPrefWidth(200);
+    timeslotListView.setPlaceholder(new Label(
+        "There are no timeslots for the selected meal"
+    ));
     VBox leftVBox = new VBox(chooseDayLabel, datePicker, choosePerioLabel,
         periodChoiceBox, timeslotLabel, timeslotListView);
     leftVBox.setAlignment(Pos.CENTER);
@@ -110,7 +113,7 @@ public class OrderedMealsPane extends BorderPane {
               Label name = new Label(foodItem.getDescription());
               Label price = new Label(foodItem.getPrice()+ "");
               HBox foodItemHBox = new HBox(name, price);
-              foodItemHBox.setPrefWidth(400);
+              foodItemHBox.setPrefWidth(800);
               foodItemHBox.setPrefHeight(100);
               foodItemHBox.setBackground(new Background(new BackgroundFill(
                   Color.LIGHTYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));

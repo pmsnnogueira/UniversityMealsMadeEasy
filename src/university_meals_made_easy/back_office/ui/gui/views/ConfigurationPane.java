@@ -70,6 +70,9 @@ public class ConfigurationPane extends BorderPane {
     timeslotListView = new ListView<>();
     timeslotListView.setPrefHeight(700);
     timeslotListView.setPrefWidth(200);
+    timeslotListView.setPlaceholder(new Label(
+        "This meal doesn't exist yet"
+    ));
     VBox leftVBox = new VBox(chooseDayLabel, datePicker, choosePeriodLabel,
         periodChoiceBox, timeslotLabel, timeslotListView);
     leftVBox.setAlignment(Pos.CENTER);

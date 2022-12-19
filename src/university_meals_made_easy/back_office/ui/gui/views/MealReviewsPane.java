@@ -52,6 +52,9 @@ public class MealReviewsPane extends BorderPane {
     Label previousMealsLabel = new Label("Previous Meals");
     previousMealsListView = new ListView<>();
     previousMealsListView.setPrefWidth(400);
+    previousMealsListView.setPlaceholder(new Label(
+        "There aren't previous meals"
+    ));
     VBox leftVBox = new VBox(previousMealsLabel, previousMealsListView);
     leftVBox.setAlignment(Pos.CENTER);
     leftVBox.setPrefWidth(500);
@@ -107,6 +110,7 @@ public class MealReviewsPane extends BorderPane {
       VBox container = new VBox(rating, comment, date);
       container.setAlignment(Pos.CENTER);
       container.setSpacing(5);
+      container.setPrefWidth(600);
       container.setBackground(new Background(new BackgroundFill(
           Color.LIGHTYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
       reviewsContainer.getChildren().add(container);

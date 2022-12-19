@@ -57,9 +57,13 @@ public class MyTicketsPane extends BorderPane {
     ticketListView = new ListView<>();
     ticketListView.setPrefHeight(700);
     ticketListView.setPrefWidth(600);
+    ticketListView.setPlaceholder(new Label(
+        "You don't have any tickets right now"));
     foodItemsListView = new ListView<>();
     foodItemsListView.setPrefHeight(700);
     foodItemsListView.setPrefWidth(600);
+    foodItemsListView.setPlaceholder(new Label(
+        "Select a ticket on the left"));
     mealPriceLabel = new Label("Meal Price: ");
     btnRefund = new Button("Refund");
     btnRefund.setPrefWidth(300);

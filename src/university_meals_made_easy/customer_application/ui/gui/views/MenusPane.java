@@ -68,6 +68,9 @@ public class MenusPane extends BorderPane {
     btnNext = new Button("Next");
     mealElementsListView = new ListView<>();
     mealElementsListView.setPrefHeight(700);
+    mealElementsListView.setPlaceholder(new Label(
+        "There are no food items for this meal"
+    ));
     HBox dayHBox = new HBox(btnPrevious, lbDatetime, btnNext);
     dayHBox.setAlignment(Pos.CENTER);
     dayHBox.setSpacing(100);

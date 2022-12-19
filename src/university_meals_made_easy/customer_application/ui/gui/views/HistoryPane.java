@@ -55,6 +55,9 @@ public class HistoryPane extends BorderPane {
 
     transactionHistoryListView = new ListView<>();
     transactionHistoryListView.setPrefHeight(700);
+    transactionHistoryListView.setPlaceholder(new Label(
+        "Empty History"
+    ));
     VBox centerVBox = new VBox(transactionHistoryListView);
     centerVBox.setPadding(new Insets(100));
     centerVBox.setAlignment(Pos.CENTER);

@@ -401,7 +401,8 @@ public class DatabaseManager {
           FROM ticket, app_user
           WHERE app_user_id = app_user.id
           AND app_user.id = %d
-          AND ticket.datetime_of_validation is null;
+          AND ticket.datetime_of_validation is null
+          AND ticket.id NOT IN (select distinct refund.ticket_id from refund);
           """, userId));
       tickets = new ArrayList<>();
       while (resultSet.next())
@@ -414,6 +415,7 @@ public class DatabaseManager {
         ));
       return tickets;
     } catch (SQLException e) {
+      e.printStackTrace();
       return null;
     }
   }

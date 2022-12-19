@@ -86,6 +86,9 @@ public class MealInsertionPane extends BorderPane {
     currentMealItemsListView = new ListView<>();
     currentMealItemsListView.setPrefHeight(700);
     currentMealItemsListView.setPrefWidth(500);
+    currentMealItemsListView.setPlaceholder(new Label(
+        "This meal has no items"
+    ));
     btnReset = new Button("Reset");
 
     VBox rightVBox = new VBox(currentMealItemsLabel, currentMealItemsListView,
