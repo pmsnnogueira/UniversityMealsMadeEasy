@@ -118,6 +118,10 @@ public class MealInsertionPane extends BorderPane {
       String price = mealItemPrice.getText();
       if(selectedMeal == null)
         return;
+      if(price == null || name == null)
+        return;
+      if(price.isEmpty() || name.isEmpty())
+        return;
       MealFoodItemInsertionResult result =  manager.insertFoodItem(
           selectedMeal, Float.parseFloat(price), name);
       AlertBox alertBox = switch (result) {
